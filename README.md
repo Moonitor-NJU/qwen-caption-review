@@ -1,5 +1,7 @@
-# 影视剧声音 Caption · 千问标注展示
+# 千问影视剧 Caption 标注展示
 
-20条影视剧原音、正文与千问完整caption。支持分类浏览、在线试听和反馈导出。
+20条原音、数据集正文和完整自动caption。纯静态页面，支持手机浏览。
 
-纯静态页面，音频与页面一起托管。
+GitHub Pages：将这些文件放在公开仓库根目录，在 Settings → Pages 中选择 Deploy from a branch，分支 main、目录 / (root)。发布成功后使用 GitHub 返回的 Pages 链接；不要把仓库文件预览链接当作试听网页。
+
+分组来自源标签，不等同人工核验事件。
