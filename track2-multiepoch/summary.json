@@ -1,0 +1,17 @@
+{
+  "epoch1": {
+    "samples": 49,
+    "hit_limit": 0,
+    "mean_duration": 5.8742857142857146
+  },
+  "epoch2": {
+    "samples": 49,
+    "hit_limit": 0,
+    "mean_duration": 6.011428571428572
+  },
+  "epoch3": {
+    "samples": 49,
+    "hit_limit": 0,
+    "mean_duration": 6.168163265306123
+  }
+}
