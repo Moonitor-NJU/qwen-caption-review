@@ -13,5 +13,10 @@
     "samples": 49,
     "hit_limit": 0,
     "mean_duration": 6.168163265306123
+  },
+  "epoch4": {
+    "samples": 49,
+    "hit_limit": 0,
+    "mean_duration": 6.14530612244898
   }
 }
