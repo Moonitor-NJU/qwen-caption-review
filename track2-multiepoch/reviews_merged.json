@@ -144,6 +144,27 @@
     "t2_48990c9b67c399b1655b|epoch2|42|nvv": "目标事件自然明显",
     "t2_48990c9b67c399b1655b|epoch2|42|notes": "哭声有点像笑声",
     "t2_f8cd33b8c085313cf07f|epoch2|42|nvv": "目标事件自然明显",
-    "t2_f8cd33b8c085313cf07f|epoch3|42|nvv": "目标事件自然明显"
+    "t2_f8cd33b8c085313cf07f|epoch3|42|nvv": "目标事件自然明显",
+    "t2_aa4a38d8ff212ec05b6a|epoch2|42|nvv": "目标事件自然明显",
+    "t2_aa4a38d8ff212ec05b6a|epoch3|42|nvv": "目标事件自然明显",
+    "t2_98604a655b35923a520d|epoch2|42|nvv": "目标事件自然明显",
+    "t2_98604a655b35923a520d|epoch3|42|nvv": "目标事件自然明显",
+    "t2_98604a655b35923a520d|epoch2|42|notes": "稍微有点不自然",
+    "t2_dd01d779ac5426059789|epoch2|42|nvv": "目标事件自然明显",
+    "t2_dd01d779ac5426059789|epoch3|42|nvv": "目标事件自然明显",
+    "t2_619cd7793e75f077e200|epoch2|42|nvv": "目标事件自然明显",
+    "t2_619cd7793e75f077e200|epoch3|42|nvv": "事件微弱或不确定",
+    "t2_619cd7793e75f077e200|epoch3|42|notes": "有疲惫感但是没有末尾叹气",
+    "t2_6344fb1e990aa2b13986|epoch2|42|nvv": "目标事件自然明显",
+    "t2_6344fb1e990aa2b13986|epoch3|42|nvv": "目标事件自然明显",
+    "t2_75c5bd4bd5a30e634f2f|epoch2|42|notes": "没有叹气，嗯了一下",
+    "t2_75c5bd4bd5a30e634f2f|epoch3|42|nvv": "目标事件自然明显",
+    "t2_352f149c1be3a4aaf3fe|epoch2|42|notes": "开头的“啊”还是失真",
+    "t2_352f149c1be3a4aaf3fe|epoch3|42|notes": "存在失真",
+    "t2_75c5bd4bd5a30e634f2f|epoch2|42|nvv": "没有目标事件",
+    "t2_6bac695da872691b62e5|epoch3|42|nvv": "目标事件自然明显",
+    "t2_7b1e163a279b065045b7|epoch3|42|nvv": "目标事件自然明显",
+    "t2_b45ba17d8a38849311ee|epoch3|42|nvv": "事件微弱或不确定",
+    "t2_50e58c40124f5becade0|epoch3|42|nvv": "目标事件自然明显"
   }
 }
