@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NVV 测试集少量试听</title>
+<link rel="stylesheet" href="style.css">
+<header><h1>NVV 候选试听审核</h1><p id="scope"></p><div class="summary" id="summary"></div>
+<div id="datasets" class="dataset-tabs" role="tablist" aria-label="候选数据集"></div>
+<div class="toolbar">
+<label>类别<select id="category"><option value="">全部类别</option></select></label>
+<label>用途<select id="role"><option value="">主候选和备选</option><option value="primary">主候选</option><option value="reserve">备选</option></select></label>
+<label>审核<select id="status"><option value="">全部状态</option><option value="pending">待核验</option><option value="pass">试听通过</option><option value="reject">排除</option><option value="uncertain">存疑</option></select></label>
+<label class="search">搜索<input id="search" type="search" placeholder="编号、原文或路径"></label>
+<div class="commands"><button id="export" type="button">导出审核记录</button><label class="import">导入记录<input id="import" type="file" accept=".json,application/json"></label></div>
+</div><div class="bar"><span id="count"></span><span id="save">未填写</span></div></header>
+<p class="portable-note">备注仅保存在当前浏览器，可通过导出、导入在设备间转移。候选尚未冻结，模型意见不等于人工结论。</p><main id="samples"></main>
+<footer><button id="prev" aria-label="上一页" title="上一页">上一页</button><span id="page"></span><button id="next" aria-label="下一页" title="下一页">下一页</button></footer>
+<p class="portable-note"><a href="ATTRIBUTION.md">音频来源与许可</a> · <a href="https://github.com/YuanGongND/vocalsound">VocalSound</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0（仅VocalSound部分）</a></p><script src="data.js"></script><script src="catalog.js"></script><script src="review.js"></script>
+</html>
