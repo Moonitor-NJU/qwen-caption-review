@@ -1,0 +1,74 @@
+[
+  {
+    "target": "crying",
+    "file": "audio/019_crying.mp3",
+    "source_sha256": "92cca93286b72f936e0acae437db1c5432fc23dd3c55eafb63d502593ffb52a1",
+    "sha256": "74ec811068fbbb64efc3f47e53d2b0558d527ada435673247b107fbd8f65374f"
+  },
+  {
+    "target": "laughing",
+    "file": "audio/038_laughing.mp3",
+    "source_sha256": "45ae45b8d6403b1df141e07b88bbec0ee1bb8bed59c2c2c7328ddf34ba476758",
+    "sha256": "26705bdefd0d02e9b455ec993393ae0668d002bc22475beda71b6a3c2d3ec9ef"
+  },
+  {
+    "target": "whispering",
+    "file": "audio/092_whispering.mp3",
+    "source_sha256": "6e3a0e5fed4ab06d53f5a47b668a5b41c6b613405fa915b889d4517090ca648d",
+    "sha256": "a2746018851a33e274121b82563b96ea475ccb93e8cb512b72ed2644a1a21f6b"
+  },
+  {
+    "target": "shouting",
+    "file": "audio/063_shouting.mp3",
+    "source_sha256": "4bee53a09a485d1426742a98996f8ba36a498ea6f535ced52a31d54f94070be3",
+    "sha256": "c1b0fe4a17abb50a3b9dbfefa3650aca73f3b038acb5b4f405ba49712a69deac"
+  },
+  {
+    "target": "stuttering",
+    "file": "audio/076_stuttering.mp3",
+    "source_sha256": "853ac116d3365c031c713288c81546f75e6ebd20fcfd63aa038eb9148616fed0",
+    "sha256": "47480ea3d4977f4369f5a5d193d54820d452da8f216cb00126ef1554ab143bbd"
+  },
+  {
+    "target": "breathless",
+    "file": "audio/005_breathless.mp3",
+    "source_sha256": "14550be2f088fb65f6d39e49f8bf859c20fca095a1976767b90faf1837471267",
+    "sha256": "48013fa69ec906c74da7c84e784e93c2e5c81fca6600bf2e31c2b7ad5ca8e61e"
+  },
+  {
+    "target": "choked_up",
+    "file": "audio/013_choked_up.mp3",
+    "source_sha256": "0b320dbc7d04a56f5d2e259c4b808e0bf8ab32c861c833fe382bf5a7cd9f229a",
+    "sha256": "3315b404d46fa9c4bd633f2a62b85a1901983b247da9de6a9e4896ae17587168"
+  },
+  {
+    "target": "trembling",
+    "file": "audio/086_trembling.mp3",
+    "source_sha256": "22293a12ca27f199f8b843af1b6acc77c44fad68673d7d615ad68713bf4c2523",
+    "sha256": "b8559340e1406d2367e4c5c517e6e2f0adfafe3ded898631c8608cdcccc0658d"
+  },
+  {
+    "target": "mumbling",
+    "file": "audio/043_mumbling.mp3",
+    "source_sha256": "f7d4d0cfaa563474de926b465a708ac675277ef2f93d3a61e5c9675f28dbf36f",
+    "sha256": "b4e326fa492a28c9f03a5c1d0803c42c978145cfd23e605a7f5c1915968cb8a4"
+  },
+  {
+    "target": "singing",
+    "file": "audio/066_singing.mp3",
+    "source_sha256": "923f1da559b4cfa32b84a7d83c501a772a80fc6e66396e47bb5d30d168118286",
+    "sha256": "9018f56eb8d713149d39d4ef14d6e29b2861c34fcd08eca5f8bfc889d5bdb883"
+  },
+  {
+    "target": "cry",
+    "file": "audio/018_cry.mp3",
+    "source_sha256": "33a15635259877cd2f95586b5f583045a5dee86e779cf6bf55e616f399362df6",
+    "sha256": "0445717ec1d6798114ee883441c0653b8d3cf8d1c519bc55520e194f1a6c8c9d"
+  },
+  {
+    "target": "laugh",
+    "file": "audio/037_laugh.mp3",
+    "source_sha256": "5a8527215d556166cee02a261a901f9bb60b7749caa583c5fc40222180bfe883",
+    "sha256": "5fe80389abeb1d100451fa9af325e9715a1e05251fe5ff469434c42902af6fcf"
+  }
+]
