@@ -70,5 +70,149 @@
     "file": "audio/037_laugh.mp3",
     "source_sha256": "5a8527215d556166cee02a261a901f9bb60b7749caa583c5fc40222180bfe883",
     "sha256": "5fe80389abeb1d100451fa9af325e9715a1e05251fe5ff469434c42902af6fcf"
+  },
+  {
+    "target": "cough",
+    "file": "audio/017_cough.mp3",
+    "source_sha256": "a2a69c9d38f80dadc08eb77b2488b682cf6c48f2091aded9ffe8d604a7d7cc9f",
+    "sha256": "0925c5e9514ebb45e9c6944add22028f82bf442c9869220f428bcbda3cd6b1bc"
+  },
+  {
+    "target": "throat_clearing",
+    "file": "audio/084_throat_clearing.mp3",
+    "source_sha256": "9aa59ce1bf87f79e6405d772167972282f3bbeff6630e708eae05829df16156f",
+    "sha256": "8d9cd0119c248c046cf985b6437ac50854dc6942337bbff9da3ac270bac27254"
+  },
+  {
+    "target": "sniff",
+    "file": "audio/070_sniff.mp3",
+    "source_sha256": "d6fdae3b846bb45fcdc989b9622985e336a2474ca7b61c924bf55361cb4f71f7",
+    "sha256": "d53593ab4e069374d6fee2e1d95800a3863f91a2f0e02dc4846e2437af189cc9"
+  },
+  {
+    "target": "sniffle",
+    "file": "audio/071_sniffle.mp3",
+    "source_sha256": "ccada1d67d4b14567b87e89a30b91b2a2271afc50f4e214366c96e9c26a8d1a8",
+    "sha256": "36b630da97562f9d2ff40dfd142cec1da3e01562c962754b201d73ec2b91d933"
+  },
+  {
+    "target": "inhale",
+    "file": "audio/035_inhale.mp3",
+    "source_sha256": "6392713dfce750bad332d74b10d26c3aa0eec7ddc63e85e609474cf77492e2e3",
+    "sha256": "38b3af7adb349bf8b65a2d2cb3127723a3e52abbcdf1d84ba9df6db74189aab5"
+  },
+  {
+    "target": "exhale",
+    "file": "audio/024_exhale.mp3",
+    "source_sha256": "eb5b35ea59448e08d97040f126601a7f24112a9715e99db339f8b464241f6f6b",
+    "sha256": "1d13f8daec3089f4be1854fd8e979aeda39a23507483c32f26e6af7cba746b76"
+  },
+  {
+    "target": "gasp",
+    "file": "audio/025_gasp.mp3",
+    "source_sha256": "9e409aeb7d8b78ff4734a217aef33e1a7987747ce3a267babf667f7b12b31606",
+    "sha256": "b5e5fb448081929cee869649f9abc7fa9d2792b9d9f501495f218b44f37465ed"
+  },
+  {
+    "target": "sneeze",
+    "file": "audio/068_sneeze.mp3",
+    "source_sha256": "4bbb5c8aad978598d6f232f052cd81ca65b6addf41f85be07ea1035eb1290d46",
+    "sha256": "6f8cb65d6503b3593f3c14e83406ab7af2c4a58971db10894897b3a915c8efdc"
+  },
+  {
+    "target": "sigh",
+    "file": "audio/065_sigh.mp3",
+    "source_sha256": "09f6eb84cb8296687ca776cbf62d6b4a82f28f384b4ea96c68f19175e6204f7b",
+    "sha256": "c59c799480428f1dee9a390c19bbc1dd4b2b98bc43698d9727d91270b15ac17d"
+  },
+  {
+    "target": "burp",
+    "file": "audio/006_burp.mp3",
+    "source_sha256": "e3fec7c1c40365814cfa6868709bb81c72bc9e7aec47afa7b178a8b98d3e9f00",
+    "sha256": "5b68e91254e77a4fea1ef265e012c6c0292caae7385139e1a2219dc5389966ec"
+  },
+  {
+    "target": "hiccup",
+    "file": "audio/032_hiccup.mp3",
+    "source_sha256": "e54d5304e37a52d39b81cf207d48b6429e4db7ab4ff342d5912c52425517e9de",
+    "sha256": "af10049a0d2c2e237558a82d3784d55e90042fd6b67408f275f7df2a41be633f"
+  },
+  {
+    "target": "clap",
+    "file": "audio/015_clap.mp3",
+    "source_sha256": "2029c217107e29becdb52db17bd44e93f9631c4ffaab2c60d32162a8967ac57f",
+    "sha256": "be422d5fb3234319c15fbf8b2ff61fe01ae2454a6af85d9c4042a094331d9a20"
+  },
+  {
+    "target": "applause",
+    "file": "audio/001_applause.mp3",
+    "source_sha256": "cea243a72a7c1a3aff1d8769d97505076aa084d28f73e9ae6a33b012f5252f6f",
+    "sha256": "6358820de1b85048c94d0e082efed79968ef4020bcd2e9b223d6d40daeb4e579"
+  },
+  {
+    "target": "sob",
+    "file": "audio/074_sob.mp3",
+    "source_sha256": "83adb63815c937f0e9215f8bbe83c9db06b6ed3028673a0b2e52ebc0ac15b9be",
+    "sha256": "767b4db75b77fa4b819c1e7592d4d17cd2266f2f04c34e50027d3ee1c35d5fb8"
+  },
+  {
+    "target": "snore",
+    "file": "audio/072_snore.mp3",
+    "source_sha256": "e56bd8e35a40e6f0ee92300abb4df411e4ea9892c6a6de6a2a1efc800776b819",
+    "sha256": "1b9dc2f8f6bc5351428a334b32d8ef16c82126942c2ad1f377b00daa0ddf03af"
+  },
+  {
+    "target": "yawn",
+    "file": "audio/094_yawn.mp3",
+    "source_sha256": "18a72aacd4bc9d9a257aa181002d2b707bf4fb19cb9116d06b3f98516ab6bd12",
+    "sha256": "d7ef0580c6fe764cff830dab103931d1714a9be0422503158fe8940f9442e479"
+  },
+  {
+    "target": "hum",
+    "file": "audio/034_hum.mp3",
+    "source_sha256": "e9ef848e023015575bd1bbe4f28941552c6a16c1d708ec72b5609ce7bc6f8a93",
+    "sha256": "da096139d85da097c9177421d25def2bd882b705bfcc48cd12117971eab47879"
+  },
+  {
+    "target": "pant",
+    "file": "audio/045_pant.mp3",
+    "source_sha256": "5467e8065ef66d489bd00c470eca13f25010ebf5ac64876cb0cf37aaa1c63114",
+    "sha256": "344f64057e5e1e1c435681bef959203507aef893a040d5aa8dc4678b6fc1d0b5"
+  },
+  {
+    "target": "groan",
+    "file": "audio/027_groan.mp3",
+    "source_sha256": "77dd7f71b10aff3d25da75977abdc50ed56ad67c28119209d93e33562ce6aca6",
+    "sha256": "a08e1a8772e608c1ee29e3a2da1d8276b92e45d8b630d296407651b52d5d6956"
+  },
+  {
+    "target": "whimper",
+    "file": "audio/090_whimper.mp3",
+    "source_sha256": "5988dca77114803f4ddb4a6efab81d1a3a03acddd0df73ab3e1c13bcb06a1a23",
+    "sha256": "6af5beb00608029e854f129e3baa032017d2b91f577b94c0f2b9d9c8705d2adf"
+  },
+  {
+    "target": "breath",
+    "file": "audio/004_breath.mp3",
+    "source_sha256": "6db4e728ebb016433b76bc61fcd1a4196debe577abd37714523e4dd12935179d",
+    "sha256": "5d0cfcde209c206babcb8d902b5982e4859d3b773b026c56466330faeee68fc7"
+  },
+  {
+    "target": "rapid_breath",
+    "file": "audio/052_rapid_breath.mp3",
+    "source_sha256": "39a6e616bee0869420daf1cd6f89ef28291be9f84c4a5d0c12107faf8748a307",
+    "sha256": "0e891d2d9a1b76098f35456be2741074397f41a6658f68394ccc324249f69a5d"
+  },
+  {
+    "target": "whine",
+    "file": "audio/091_whine.mp3",
+    "source_sha256": "5110559715f55dfda05830f6b89a5ea36c29d02c062b156d83480e06173dae04",
+    "sha256": "8df006d48a5d18c6dc8661e7dd6875673042a6ee004fb5616d66b94e7312ceec"
+  },
+  {
+    "target": "hiss",
+    "file": "audio/033_hiss.mp3",
+    "source_sha256": "90aa41e46a489c909519234d5ed6d68432aaeeb14d68a7256c98eb43fd572206",
+    "sha256": "96bd83ffcd33204570bab882b975ebaac2957dc394de7be2402ff5434af7bb38"
   }
 ]

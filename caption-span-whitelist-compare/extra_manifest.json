@@ -1,0 +1,218 @@
+[
+  {
+    "target": "cough",
+    "file": "audio/017_cough.mp3",
+    "source_sha256": "a2a69c9d38f80dadc08eb77b2488b682cf6c48f2091aded9ffe8d604a7d7cc9f",
+    "sha256": "0925c5e9514ebb45e9c6944add22028f82bf442c9869220f428bcbda3cd6b1bc",
+    "caption": "（年轻女性声音柔和，语速平缓，语气轻松自然。说完后有一声咳嗽。）",
+    "allowed": "独立声音事件：\n- cough：咳嗽；位置：说完后。\n带标签的说话方式：无。",
+    "text_review": "咳嗽类别及说完后的位置与白名单一致；“一声”的具体次数未在白名单中明确给出。"
+  },
+  {
+    "target": "throat_clearing",
+    "file": "audio/084_throat_clearing.mp3",
+    "source_sha256": "9aa59ce1bf87f79e6405d772167972282f3bbeff6630e708eae05829df16156f",
+    "sha256": "8d9cd0119c248c046cf985b6437ac50854dc6942337bbff9da3ac270bac27254",
+    "caption": "（清嗓后，年轻女性声音自然，语速平缓，语气轻松随意。）",
+    "allowed": "独立声音事件：\n- throat_clearing：清嗓；位置：开口前。\n带标签的说话方式：无。",
+    "text_review": "清嗓后开始讲话，事件类别和开口前的位置与白名单一致。"
+  },
+  {
+    "target": "sniff",
+    "file": "audio/070_sniff.mp3",
+    "source_sha256": "d6fdae3b846bb45fcdc989b9622985e336a2474ca7b61c924bf55361cb4f71f7",
+    "sha256": "d53593ab4e069374d6fee2e1d95800a3863f91a2f0e02dc4846e2437af189cc9",
+    "caption": "（男声语速平稳，语气沉稳，说完后有嗅闻声。）",
+    "allowed": "独立声音事件：\n- sniff：嗅闻声；位置：说完后。\n带标签的说话方式：无。",
+    "text_review": "按新标签体系保留嗅闻声，位置为说完后；此处未将 sniff 改写成 sniffle 吸鼻。"
+  },
+  {
+    "target": "sniffle",
+    "file": "audio/071_sniffle.mp3",
+    "source_sha256": "ccada1d67d4b14567b87e89a30b91b2a2271afc50f4e214366c96e9c26a8d1a8",
+    "sha256": "36b630da97562f9d2ff40dfd142cec1da3e01562c962754b201d73ec2b91d933",
+    "caption": "（年轻女性声音略带鼻音，语速缓慢，情绪低落，说话间有吸鼻声。）",
+    "allowed": "独立声音事件：\n- sniffle：吸鼻声；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留讲话期间的吸鼻声，与白名单类别和位置一致。"
+  },
+  {
+    "target": "inhale",
+    "file": "audio/035_inhale.mp3",
+    "source_sha256": "6392713dfce750bad332d74b10d26c3aa0eec7ddc63e85e609474cf77492e2e3",
+    "sha256": "38b3af7adb349bf8b65a2d2cb3127723a3e52abbcdf1d84ba9df6db74189aab5",
+    "caption": "（年轻女性声音柔和，语速平缓，语气略带疲惫，说话间有一次吸气。）",
+    "allowed": "独立声音事件：\n- inhale：吸气；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "吸气类别和说话间位置与白名单一致；“一次”未由白名单明确给出。"
+  },
+  {
+    "target": "exhale",
+    "file": "audio/024_exhale.mp3",
+    "source_sha256": "eb5b35ea59448e08d97040f126601a7f24112a9715e99db339f8b464241f6f6b",
+    "sha256": "1d13f8daec3089f4be1854fd8e979aeda39a23507483c32f26e6af7cba746b76",
+    "caption": "（男声语速平稳，语气略带沉重，说完后有一声呼气。）",
+    "allowed": "独立声音事件：\n- exhale：呼气；位置：说完后。\n带标签的说话方式：无。",
+    "text_review": "呼气类别和说完后位置与白名单一致；“一声”未由白名单明确给出。"
+  },
+  {
+    "target": "gasp",
+    "file": "audio/025_gasp.mp3",
+    "source_sha256": "9e409aeb7d8b78ff4734a217aef33e1a7987747ce3a267babf667f7b12b31606",
+    "sha256": "b5e5fb448081929cee869649f9abc7fa9d2792b9d9f501495f218b44f37465ed",
+    "caption": "（年轻女性声音清亮，语速较快，语气轻松自然。说话间有倒吸气声。）",
+    "allowed": "独立声音事件：\n- gasp：倒吸气；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留说话期间的倒吸气，与白名单类别和位置一致。"
+  },
+  {
+    "target": "sneeze",
+    "file": "audio/068_sneeze.mp3",
+    "source_sha256": "4bbb5c8aad978598d6f232f052cd81ca65b6addf41f85be07ea1035eb1290d46",
+    "sha256": "6f8cb65d6503b3593f3c14e83406ab7af2c4a58971db10894897b3a915c8efdc",
+    "caption": "（男声说话时突然打了个喷嚏，随后语气略带歉意地道歉。）",
+    "allowed": "独立声音事件：\n- sneeze：喷嚏；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留了喷嚏，但“道歉”披露正文中的行为含义，“突然”也不是标签提供的信息。"
+  },
+  {
+    "target": "sigh",
+    "file": "audio/065_sigh.mp3",
+    "source_sha256": "09f6eb84cb8296687ca776cbf62d6b4a82f28f384b4ea96c68f19175e6204f7b",
+    "sha256": "c59c799480428f1dee9a390c19bbc1dd4b2b98bc43698d9727d91270b15ac17d",
+    "caption": "（男声语气低沉，语速缓慢，中间伴随一声叹气，显得犹豫不决。）",
+    "allowed": "独立声音事件：\n- sigh：叹气；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "叹气类别和讲话中间的位置匹配；“一声”未由白名单明确给出，犹豫语气需核听。"
+  },
+  {
+    "target": "burp",
+    "file": "audio/006_burp.mp3",
+    "source_sha256": "e3fec7c1c40365814cfa6868709bb81c72bc9e7aec47afa7b178a8b98d3e9f00",
+    "sha256": "5b68e91254e77a4fea1ef265e012c6c0292caae7385139e1a2219dc5389966ec",
+    "caption": "（男声，语速中等，语气略带夸张，表达不适后发出饱嗝声。）",
+    "allowed": "独立声音事件：\n- burp：饱嗝（嗳气）；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留饱嗝类别，但“表达不适后”泄露了正文语义，未明确采用白名单给定的说话间位置。"
+  },
+  {
+    "target": "hiccup",
+    "file": "audio/032_hiccup.mp3",
+    "source_sha256": "e54d5304e37a52d39b81cf207d48b6429e4db7ab4ff342d5912c52425517e9de",
+    "sha256": "af10049a0d2c2e237558a82d3784d55e90042fd6b67408f275f7df2a41be633f",
+    "caption": "（年轻女性声音略带无奈，语速中等，语气中透露出懊恼，说话间发出一次呃逆。）",
+    "allowed": "独立声音事件：\n- hiccup：呃逆；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "使用呃逆而不是饱嗝，位置匹配；“一次”未由白名单明确给出。"
+  },
+  {
+    "target": "clap",
+    "file": "audio/015_clap.mp3",
+    "source_sha256": "2029c217107e29becdb52db17bd44e93f9631c4ffaab2c60d32162a8967ac57f",
+    "sha256": "be422d5fb3234319c15fbf8b2ff61fe01ae2454a6af85d9c4042a094331d9a20",
+    "caption": "（女声语速平稳，音色清晰，说完后有拍手声。）",
+    "allowed": "独立声音事件：\n- clap：拍手；位置：说完后。\n带标签的说话方式：无。",
+    "text_review": "保留说完后的拍手事件，与白名单类别及位置一致。"
+  },
+  {
+    "target": "applause",
+    "file": "audio/001_applause.mp3",
+    "source_sha256": "cea243a72a7c1a3aff1d8769d97505076aa084d28f73e9ae6a33b012f5252f6f",
+    "sha256": "6358820de1b85048c94d0e082efed79968ef4020bcd2e9b223d6d40daeb4e579",
+    "caption": "（鼓掌声后，男声语速平缓，语气轻松，略带调侃。）",
+    "allowed": "独立声音事件：\n- applause：鼓掌；位置：开口前。\n带标签的说话方式：无。",
+    "text_review": "先鼓掌、后讲话，与开口前的位置一致，未与拍手或咳嗽混淆。"
+  },
+  {
+    "target": "sob",
+    "file": "audio/074_sob.mp3",
+    "source_sha256": "83adb63815c937f0e9215f8bbe83c9db06b6ed3028673a0b2e52ebc0ac15b9be",
+    "sha256": "767b4db75b77fa4b819c1e7592d4d17cd2266f2f04c34e50027d3ee1c35d5fb8",
+    "caption": "（男声低沉，语速缓慢，情绪悲伤，说完后有抽泣声。）",
+    "allowed": "独立声音事件：\n- sob：抽泣；位置：说完后。\n带标签的说话方式：无。",
+    "text_review": "保留说完后的抽泣，与白名单类别及位置一致。"
+  },
+  {
+    "target": "snore",
+    "file": "audio/072_snore.mp3",
+    "source_sha256": "e56bd8e35a40e6f0ee92300abb4df411e4ea9892c6a6de6a2a1efc800776b819",
+    "sha256": "1b9dc2f8f6bc5351428a334b32d8ef16c82126942c2ad1f377b00daa0ddf03af",
+    "caption": "（男声语气无奈，背景中传来打鼾声。）",
+    "allowed": "独立声音事件：\n- snore：打鼾；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "打鼾类别保留，但写成了不允许的背景声，且未明确白名单的说话间位置。"
+  },
+  {
+    "target": "yawn",
+    "file": "audio/094_yawn.mp3",
+    "source_sha256": "18a72aacd4bc9d9a257aa181002d2b707bf4fb19cb9116d06b3f98516ab6bd12",
+    "sha256": "d7ef0580c6fe764cff830dab103931d1714a9be0422503158fe8940f9442e479",
+    "caption": "（男声，音色低沉，语速缓慢，语气疲惫，开口前有打哈欠的声音。）",
+    "allowed": "独立声音事件：\n- yawn：打哈欠；位置：开口前。\n带标签的说话方式：无。",
+    "text_review": "打哈欠类别和开口前位置一致；前半段仍较像属性列举，表达可以更自然。"
+  },
+  {
+    "target": "hum",
+    "file": "audio/034_hum.mp3",
+    "source_sha256": "e9ef848e023015575bd1bbe4f28941552c6a16c1d708ec72b5609ce7bc6f8a93",
+    "sha256": "da096139d85da097c9177421d25def2bd882b705bfcc48cd12117971eab47879",
+    "caption": "（年轻女性声音轻快，语速适中，语气轻松，说话间伴有哼唱。）",
+    "allowed": "独立声音事件：\n- hum：哼唱；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留讲话期间的哼唱，与白名单类别和位置一致，没有写成普通应答哼声。"
+  },
+  {
+    "target": "pant",
+    "file": "audio/045_pant.mp3",
+    "source_sha256": "5467e8065ef66d489bd00c470eca13f25010ebf5ac64876cb0cf37aaa1c63114",
+    "sha256": "344f64057e5e1e1c435681bef959203507aef893a040d5aa8dc4678b6fc1d0b5",
+    "caption": "（男声急促呼喊，伴随喘息声，情绪紧张。）",
+    "allowed": "独立声音事件：\n- pant：喘息；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留独立喘息声，但没有明确采用说话间这一粗略位置；“急促呼喊”的说话方式仍需核听。"
+  },
+  {
+    "target": "groan",
+    "file": "audio/027_groan.mp3",
+    "source_sha256": "77dd7f71b10aff3d25da75977abdc50ed56ad67c28119209d93e33562ce6aca6",
+    "sha256": "a08e1a8772e608c1ee29e3a2da1d8276b92e45d8b630d296407651b52d5d6956",
+    "caption": "（男声呻吟后，语气急切地请求，声音中带着恳求和紧张。）",
+    "allowed": "独立声音事件：\n- groan：呻吟；位置：开口前。\n- groan：呻吟；位置：说完后。\n带标签的说话方式：无。",
+    "text_review": "只写了开口前的呻吟，遗漏白名单要求的说完后呻吟；标签类别有保留。"
+  },
+  {
+    "target": "whimper",
+    "file": "audio/090_whimper.mp3",
+    "source_sha256": "5988dca77114803f4ddb4a6efab81d1a3a03acddd0df73ab3e1c13bcb06a1a23",
+    "sha256": "6af5beb00608029e854f129e3baa032017d2b91f577b94c0f2b9d9c8705d2adf",
+    "caption": "（年轻女性声音，开头有呜咽声，随后语速缓慢，语气低沉，情绪悲伤。）",
+    "allowed": "独立声音事件：\n- whimper：呜咽；位置：开口前。\n带标签的说话方式：无。",
+    "text_review": "保留开头的呜咽，与白名单类别和位置一致；句子开头仍偏属性式表达。"
+  },
+  {
+    "target": "breath",
+    "file": "audio/004_breath.mp3",
+    "source_sha256": "6db4e728ebb016433b76bc61fcd1a4196debe577abd37714523e4dd12935179d",
+    "sha256": "5d0cfcde209c206babcb8d902b5982e4859d3b773b026c56466330faeee68fc7",
+    "caption": "（男声，语气坚定，语速平稳，中间有一次呼吸声。）",
+    "allowed": "独立声音事件：\n- breath：呼吸声；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留讲话中间的呼吸声；“一次”未由白名单明确给出，表述仍偏属性列举。"
+  },
+  {
+    "target": "rapid_breath",
+    "file": "audio/052_rapid_breath.mp3",
+    "source_sha256": "39a6e616bee0869420daf1cd6f89ef28291be9f84c4a5d0c12107faf8748a307",
+    "sha256": "0e891d2d9a1b76098f35456be2741074397f41a6658f68394ccc324249f69a5d",
+    "caption": "（男声语气急促，伴随急促呼吸，情绪显得紧张慌乱。）",
+    "allowed": "独立声音事件：\n- rapid_breath：急促呼吸；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留急促呼吸类别，未明确说话间的粗位置；没有新增其他明确独立事件。"
+  },
+  {
+    "target": "whine",
+    "file": "audio/091_whine.mp3",
+    "source_sha256": "5110559715f55dfda05830f6b89a5ea36c29d02c062b156d83480e06173dae04",
+    "sha256": "8df006d48a5d18c6dc8661e7dd6875673042a6ee004fb5616d66b94e7312ceec",
+    "caption": "（年轻女性声音，带有哀鸣式抱怨声，语速缓慢，语气中透露出担忧和焦虑。）",
+    "allowed": "独立声音事件：\n- whine：哀鸣式抱怨声；位置：开口前。\n- whine：哀鸣式抱怨声；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "哀鸣式抱怨声类别保留，但未分别表达白名单的开口前、说话间两个位置；前半段仍偏属性式表达。"
+  },
+  {
+    "target": "hiss",
+    "file": "audio/033_hiss.mp3",
+    "source_sha256": "90aa41e46a489c909519234d5ed6d68432aaeeb14d68a7256c98eb43fd572206",
+    "sha256": "96bd83ffcd33204570bab882b975ebaac2957dc394de7be2402ff5434af7bb38",
+    "caption": "（男声语气无奈，语速缓慢，说话间发出嘶声。）",
+    "allowed": "独立声音事件：\n- hiss：嘶声；位置：说话间。\n带标签的说话方式：无。",
+    "text_review": "保留讲话期间的嘶声，与白名单类别及位置一致。"
+  }
+]
