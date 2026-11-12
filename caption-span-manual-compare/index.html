@@ -1,0 +1,641 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>跨度标签与独立事件 · Caption 验证</title><style>body{max-width:1050px;margin:24px auto;padding:0 16px;background:#f4f7fb;color:#19324c;font:17px/1.8 system-ui}article,details.panel{padding:18px;margin:20px 0;background:white;border-radius:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.old,.new{background:#edf1f7;padding:14px;border-radius:8px}.new{background:#e7f4ed}audio{width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.7 system-ui}small{color:#526a80}@media(max-width:700px){.grid{grid-template-columns:1fr}}</style><h1>跨度标签与独立事件 · Caption 验证</h1>
+<p>10 种跨度风格各 1 条，加独立哭声、笑声各 1 条，共 12 条真实原音。已返回 12/12 条。本轮使用人工修改的 Prompt，仅统一五个主标题的 Markdown 格式；同一批原音、带标签文本均保持不变。模型输出未人工改写。本次因显卡占用改用 node34 双卡 BF16＋CPU 卸载、batch 1；上一版为 node54 双卡 BF16、batch 2，运行条件并非完全一致。</p>
+<p>跨度标签应体现为讲话方式，而非自动产生独立事件。本轮允许明确听到的未标注事件，因此“出现标签外事件”不能直接判错，仍须对照原音。页面播放的是完整原音，不是 TTS 结果。</p>
+<details class="panel"><summary>本次人工修改版完整 Prompt</summary><pre># 任务描述
+你是一位专业的音频信息分析专家。请根据输入音频和带标签文本，生成一段简短、自然的中文声音描述，用作语音生成模型的 instruction。你只能基于当前音频片段的听觉信号进行标注，不得引用无法通过声音感知的信息。你的核心准则是「先听后判」，所有标签必须以听觉证据为第一优先级。
+两种输入的用途必须严格区分：
+	•	音频：用于判断声音特征、情绪和说话风格。
+	•	带标签文本：仅用于提取已标注的副语言事件、说话方式及其粗粒度发生位置。
+# 识别对象
+仅根据当前音频中实际可听到的声音，描述以下显著特征，不必逐项罗列：
+	1	声音特征：男声或女声、大致年龄段、音高及显著音色特点。
+	2	情绪状态：如开心、悲伤、兴奋、愤怒、平静，以及能够明确听出的强度。
+	3	说话风格：语速、节奏、语调及明显的表达方式。
+性别和年龄段能够判断时，用“年轻女性”“中年男子”等自然称呼作主语；无法确定时使用“男声”“女声”等较稳妥的称呼。不要猜测精确年龄，也不要为凑齐维度补充不明显的特征。
+# 补充信息
+下面提供带有副语言事件标签的文本：
+{{TAGGED_TEXT}}
+使用规则：
+	1	将其中的有效事件标签作为本任务已提供的、客观存在的事件标注，不重新判断事件是否存在，不擅自删除、替换或增加事件类别。
+	2	正文仅用于判断标签与讲话的先后关系，不得用于推断声音特征、情绪、说话风格、人物身份或场景。
+	3	位置利用正文标签与讲话的先后关系，描述为“开口前”“说话间”“说完后”等。标签位于正文之前、正文中间或正文之后时，分别采用对应位置；同类事件分布在多个位置时可以合并表述。
+	4	不引用标签附近的词句，不描述事件发生在某个具体词语之前或之后，不输出时间戳。标签未明确提供的次数、时长、强弱和动作细节不要补写。
+	5	无有效事件标签时，只描述音频中的声音特征、情绪和说话风格，不自行补充副语言事件。
+## 事件类别
+
+参考新标签体系：
+
+一级大类 (Primary)
+二级分类 (Sub-category)
+中文动作描述 
+规范英文标签 (Standard English Tag)
+audio
+A. 生理与呼吸
+呼吸 (Breath)
+呼吸
+[breath]
+
+吸气
+[inhale]
+
+呼气
+[exhale]
+
+急促呼吸
+[rapid_breath]
+
+喘类 (Pant/Wheeze)
+喘息（张口急促，无声带振动）
+[pant]
+
+喘鸣（气道收缩高频音）
+[wheeze]
+
+倒吸气 (Gasp)
+倒吸凉气/惊气
+[gasp]
+
+鼻腔 (Nasal)
+嗅闻
+[sniff]
+
+吸鼻子
+[sniffle]
+
+喷鼻息
+[snort]
+
+擤鼻涕
+[nose_blowing]
+1
+喉部生理 (Vocal Tract)
+咳嗽
+[cough]
+
+清嗓子
+[throat_clearing]
+
+打喷嚏
+[sneeze]
+
+打哈欠
+[yawn]
+
+打鼾
+[snore]
+
+抽嗝
+[hiccup]
+
+饱嗝
+[burp]
+
+叹气
+[sigh]
+
+呕吐 (Retch)
+真实呕吐
+[vomit]
+1
+干呕
+[retch]
+1
+口腔清理 (Clearance)
+啐/吐口水
+[spit]
+
+咽口水 (大口)
+[gulp]
+
+吞咽
+[swallow]
+
+B. 嘴部与器官
+咂嘴 (Lipsmack)
+咂嘴 / 吧唧嘴
+[lip_smack]
+
+啧声 (Tsk)
+单次啧声
+[tsk]
+
+连续啧啧声 / 舌头咯咯声
+[cluck]
+
+嘶声 (Hiss)
+嘶声 / 倒吸气摩擦
+[hiss]
+
+口哨 (Whistle)
+吹口哨
+[whistle]
+
+亲吻 (Kiss)
+吧唧亲吻声 (物理接触)
+[kiss]
+1
+飞吻声 (空气爆破)
+[mock_kiss]
+
+吹气 (Blow)
+吹气
+[blow]
+
+咀嚼 (Chew)
+咀嚼
+[chew]
+1
+吸溜 (Slurp)
+吸溜声 (伴随水分)
+[slurp]
+
+舔舐 (Lick)
+舔舐声
+[lick]
+1
+唇颤音 (Lip Trill)
+闭口双唇纯吹气 / 噗噜噜
+[lip_trill]
+
+舌唇颤音 (Raspberry)
+吐舌头纯吹气 / 淘气噗声
+[raspberry]
+
+颤舌音 (Tongue Flutter)
+伴声带震动的快速 / 略略略
+[tongue_fluttering]
+
+牙齿 (Teeth)
+牙齿打颤
+[teeth_chattering]
+1
+磨牙
+[teeth_grinding]
+1
+C. 体能与宣泄
+笑声 (Laugh)
+常规笑
+[laugh]
+
+轻笑
+[chuckle]
+
+咯咯笑
+[giggle]
+
+窃笑
+[snicker]
+
+嗤笑
+[scoff]
+
+哭声 (Cry)
+哭泣
+[cry]
+
+呜咽 (压抑)
+[whimper]
+
+抽泣 (伴随呼吸痉挛)
+[sob]
+
+哀号 (嚎啕大哭)
+[wail]
+
+抱怨 (Whine)
+哀鸣 / 撒娇式抱怨
+[whine]
+
+呻吟 (Moan/Groan)
+沉闷呻吟 / 痛苦发力
+[groan]
+
+闷哼 (Grunt)
+闷哼声 / 短促发力
+[grunt]
+
+呼喊 (Vocalize)
+尖叫
+[scream]
+
+咆哮
+[roar]
+
+大喊 / 呼唤
+[shout]
+
+D. 认知与交互
+满足 (Satisfaction)
+表达好吃的“嗯~”
+[satisfaction-hmm]
+
+喝完酒爽快的“啊~”
+[satisfaction-ah]
+
+满足大类占位符
+[satisfaction-X]
+
+迟疑 (Hesitation)
+迟疑：啊…
+[hesitation-ah]
+
+迟疑：呃…
+[hesitation-uh]
+
+迟疑：嗯...
+[hesitation-hmm]
+
+迟疑大类占位符
+[hesitation-X]
+
+应答 (Response)
+应答：降调嗯
+[response-hmm]
+
+应答：降调哦
+[response-oh]
+
+应答：平调啊
+[response-ah]
+
+应答大类占位符
+[response-X]
+
+呼唤 (Call)
+呼唤：喂
+[call-wei]
+
+呼唤：嘿
+[call-hey]
+
+呼唤：诶
+[call-ei]
+
+呼唤：
+[call-oi]
+
+呼唤大类占位符
+[call-X]
+
+疑问 (Questioning)
+升调疑惑：嗯?
+[question-hmm]
+
+升调疑惑：啊?
+[question-ah]
+
+升调疑惑：咦?
+[question-yi]
+
+升调疑惑：哦?
+[question-oh]
+
+升调疑惑：哈?
+[question-huh]
+
+升调疑惑：诶？
+[question-ei]
+
+疑问大类占位符
+[question-X]
+
+惊讶 (Surprise)
+突发惊叹：啊!
+[surprise-ah]
+
+突发惊叹：哇!
+[surprise-wow]
+
+恍然大悟：哦!
+[surprise-oh]
+
+突发惊叹：哟！
+[surprise-yo]
+
+惊讶大类占位符
+[surprise-X]
+
+不满 (Disapproval)
+冷哼
+[disapproval-hmph]
+
+轻蔑地“切”
+[disapproval-qie]
+
+厌恶“咦”
+[disapproval-yi]
+
+厌恶的拟声呕吐
+[disapproval-eww]
+
+不满大类占位符
+[disapproval-X]
+
+嘘声 (Shush)
+要求安静的嘘声
+[shush]
+
+倒彩 (Boo)
+喝倒彩 / 群体嘘声
+[boo]
+
+E. 音乐与群体
+音乐 (Music)
+哼唱
+[hum]
+
+鼓掌 (Applause)
+零星拍手
+[clap]
+
+群体鼓掌
+[applause]
+1
+欢呼 (Cheer)
+欢呼
+[cheer]
+
+F. 腔调 (跨度标签)
+说话状态 (Speaking Style)
+笑着说
+&lt;laughing&gt; ... &lt;/laughing&gt;
+
+哭着说
+&lt;crying&gt; ... &lt;/crying&gt;
+
+哽咽着说
+&lt;choked_up&gt; ... &lt;/choked_up&gt;
+
+大喊着说
+&lt;shouting&gt; ... &lt;/shouting&gt;
+
+气喘吁吁地说
+&lt;breathless&gt; ... &lt;/breathless&gt;
+
+耳语着说 / 气声
+&lt;whispering&gt; ... &lt;/whispering&gt;
+
+唱歌 / 唱腔
+&lt;singing&gt; ... &lt;/singing&gt;
+
+含糊咕哝着说
+&lt;mumbling&gt; ... &lt;/mumbling&gt;
+
+口吃/结巴着说
+&lt;stuttering&gt; ... &lt;/stuttering&gt;
+
+颤抖着说
+&lt;trembling&gt; ... &lt;/trembling&gt;
+
+
+
+- 每个独立事件标签都必须在 caption 中得到明确表达。
+- 使用准确的中文事件名称，可以自然串联，但不得改变事件类别。
+- 不得用情绪、语气或笼统的“气息声”“声音变化”替代具体事件。
+- 标签之外的独立声音事件默认不补充；只有明确的独立听觉证据才允许补充，具体遵守“严重警告”。
+- 不得用一个事件覆盖另一个事件；不同类别的标签必须分别保留。
+
+必须区分：
+- cough＝咳嗽，throat_clearing／throat clearing＝清嗓，不能互换。
+- cry＝哭声，sob＝抽泣，laugh＝笑声，不能互换。
+- sniff＝吸鼻，inhale＝吸气，exhale＝呼气，gasp＝倒吸气，pant＝喘息，不能互换。
+- burp＝嗳气或饱嗝，hiccup＝呃逆，不能互换。
+- clap＝拍手，applause＝鼓掌，不能改成咳嗽、清嗓或其他声音。
+
+尖括号包裹台词的跨度标签，描述的是这段讲话的发声方式：
+- &lt;crying&gt;……&lt;/crying&gt;：说话带有哭腔。
+- &lt;laughing&gt;……&lt;/laughing&gt;：带着笑意说话。
+- &lt;whispering&gt;……&lt;/whispering&gt;：以轻声耳语的方式说。
+- &lt;shouting&gt;……&lt;/shouting&gt;：提高音量喊着说。
+- &lt;stuttering&gt;……&lt;/stuttering&gt;：说话时有明显结巴或重复。
+- &lt;breathless&gt;……&lt;/breathless&gt;：说话时气息急促、带有气喘感。
+还有更多类似的跨度标签，请你参考上面的说法来表述
+
+将跨度标签自然融入对应讲话的风格描述，不将其改写成独立声音事件，也不据此编造“开口前哭泣”“说完后发笑”等事件及位置。其他跨度标签同样按其发声方式解释。
+
+方括号中的独立事件标签，按规定的事件类别和粗略位置保留，不替换、不遗漏。
+
+## 事件位置
+
+只使用“开口前”“说话间”“说完后”等粗略位置：
+
+- 标签前没有实际讲话内容、后面有讲话内容：开口前。
+- 标签前后都有实际讲话内容：说话间。
+- 标签前有讲话内容、后面没有实际讲话内容：说完后。
+- 判断时忽略标点、空格、换行和其他标签。标签后只有句号或逗号，不代表后面还有讲话。
+- 同类事件出现在多个位置时，保留这些位置；同一位置的重复标签可以合并描述。
+- 没有讲话时，只描述事件及其先后关系，不虚构讲话。
+- 不根据音频移动标签位置，不写时间戳或具体词语位置
+
+# 严重警告
+	•	不得根据正文的词义、剧情或事件标签推断情绪。例如，台词提到悲伤不代表声音悲伤，出现哭声标签也不代表整句都带哭腔；这些特征必须从音频中独立判断。
+	•	不转录、翻译、引用、概括或暗示台词内容，不透露人物关系、谈话主题、行为目的或故事情节。
+	•	不描述背景音乐、环境噪声、地点、录音条件、混响或空间感。若标签明确标注鼓掌、拍手等目标事件，仍需保留该事件。
+	•	不混淆事件类别：吸气不等于吸鼻，清嗓不等于咳嗽，嗳气或饱嗝不等于呃逆。
+	•	不输出英文标签、字段标题、属性清单或分析过程，不使用“像是在……”“仿佛……”等推测性表述。
+	•	对于标签之外的独立声音事件，默认不补充。只有音频中存在清楚、独立且能够明确区分类别的听觉证据时，才允许描述；听不清、仅疑似或类别不确定时一律不写。提交前逐一检查 caption 中的每个独立声音事件：它是否有明确标签依据，或有明确的独立听觉证据？两者都没有的，必须删除。
+# 格式要求
+	1	用一至两句连贯、自然的中文描述，通常为30—70字；事件较多时可适当延长，不为压缩长度遗漏已标注事件。
+	2	前半部分自然串联人物声音、主要情绪和说话风格；后半部分融入副语言事件及其粗略位置。避免以逗号、分号堆砌名词和形容词。
+	3	多个说话人能够从音频中清楚区分时，可以分别简述；无法确定事件归属时，不将事件强行归于某个说话人。
+	4	只有声音事件、没有讲话时，直接描述事件，不虚构讲话或说话风格。
+	5	使用中文全角标点，整段描述用中文圆括号包裹。
+以下示例仅说明表达方式，不得照搬其中事实：
+	•	（中年男子开口前有一声轻咳，然后用低沉略哑的嗓音缓慢说着，语气平静。）
+	•	（年轻女性用清亮的声音说着，语调轻快，带着明显的愉悦感，说话间夹有笑声。）
+	•	（年轻女性用柔和的嗓音平稳地说着，语气自然，开口前有吸鼻声，说话间有一声清嗓声。）
+提交前检查：声音特征是否仅来自音频；是否完整保留有效事件标签及粗略位置；是否泄露台词语义；是否添加了无依据的细节。
+只输出一个合法JSON对象，不输出Markdown或额外解释：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}</pre></details><details class="panel"><summary>上一版完整 Prompt</summary><pre># 任务描述
+
+你是一位专业的音频信息分析专家。请根据音频和带标签文本，生成一段简短、自然的中文声音描述，用作语音生成模型的 instruction。
+
+本任务中，两种输入有不同的决定权：
+- 声音特征和情绪：仅根据音频判断。说话风格以音频为依据，并按下文规则表达已提供的跨度标签。
+- 已标注副语言事件的类别、是否出现及粗略位置：严格采用文本标签，不根据音频重新判断。
+
+事件标签是本任务要求保留的标注，不是待核查的候选。即使你从音频中听出了不同事件，也不得替换已有事件标签。标签之外的事件只按“严重警告”中的明确听觉证据规则处理。
+
+# 识别对象
+
+仅从音频中提取显著的声音特征、情绪和说话风格：
+1. 声音特征：性别、大致年龄段、音高及显著音色。
+2. 情绪状态：实际可听出的主要情绪及强度。
+3. 说话风格：语速、节奏、语调及明显的表达方式。
+
+能够判断时，用“年轻女性”“中年男子”等称呼自然起句；无法确定年龄时使用“男声”“女声”等称呼。不猜测精确年龄，不为凑齐维度补充信息。
+
+不得根据正文含义或事件标签推断上述特征。例如，正文写“吃撑了”不能据此描述“饱胀感”；出现 cry 标签不能据此认定整句声音悲伤。
+
+# 补充信息
+
+带标签文本：
+{{TAGGED_TEXT}}
+
+请先在内部整理标签约束，再生成描述，不输出整理过程。
+
+## 事件类别
+
+- 每个独立事件标签都必须在 caption 中得到明确表达。
+- 使用准确的中文事件名称，可以自然串联，但不得改变事件类别。
+- 不得用情绪、语气或笼统的“气息声”“声音变化”替代具体事件。
+- 标签之外的独立声音事件默认不补充；只有明确的独立听觉证据才允许补充，具体遵守“严重警告”。
+- 不得用一个事件覆盖另一个事件；不同类别的标签必须分别保留。
+
+必须区分：
+- cough＝咳嗽，throat_clearing／throat clearing＝清嗓，不能互换。
+- cry＝哭声，sob＝抽泣，laugh＝笑声，不能互换。
+- sniff＝吸鼻，inhale＝吸气，exhale＝呼气，gasp＝倒吸气，pant＝喘息，不能互换。
+- burp＝嗳气或饱嗝，hiccup＝呃逆，不能互换。
+- clap＝拍手，applause＝鼓掌，不能改成咳嗽、清嗓或其他声音。
+- 不得将旧中文标签“不满”解释为 burp。
+
+尖括号包裹台词的跨度标签，描述的是这段讲话的发声方式：
+- &lt;crying&gt;……&lt;/crying&gt;：说话带有哭腔。
+- &lt;laughing&gt;……&lt;/laughing&gt;：带着笑意说话。
+- &lt;whispering&gt;……&lt;/whispering&gt;：轻声耳语。
+- &lt;shouting&gt;……&lt;/shouting&gt;：提高音量喊着说话。
+- &lt;stuttering&gt;……&lt;/stuttering&gt;：说话有明显结巴或重复。
+- &lt;breathless&gt;……&lt;/breathless&gt;：说话气息急促、带有气喘感。
+
+将跨度标签自然融入对应讲话的风格描述，不将其改写成独立声音事件，也不据此编造“开口前哭泣”“说完后发笑”等事件及位置。其他跨度标签同样按其发声方式解释。
+
+方括号中的独立事件标签，按规定的事件类别和粗略位置保留，不替换、不遗漏。
+
+## 事件位置
+
+只使用“开口前”“说话间”“说完后”等粗略位置：
+
+- 标签前没有实际讲话内容、后面有讲话内容：开口前。
+- 标签前后都有实际讲话内容：说话间。
+- 标签前有讲话内容、后面没有实际讲话内容：说完后。
+- 判断时忽略标点、空格、换行和其他标签。标签后只有句号或逗号，不代表后面还有讲话。
+- 同类事件出现在多个位置时，保留这些位置；同一位置的重复标签可以合并描述。
+- 没有讲话时，只描述事件及其先后关系，不虚构讲话。
+- 不根据音频移动标签位置，不写时间戳或具体词语位置。
+
+# 严重警告
+
+1. 禁止根据音频将 cough 改成清嗓、cry 改成笑声、clap 改成清嗓，或进行其他事件替换。
+2. 没有标签依据的独立声音事件，只有明确听到且能够明确区分类别时才允许补充，不得根据风格或台词推断。
+3. 标签没有提供的次数、时长和强弱，不得补写。单个标签不等于明确标注“一声”，不要习惯性添加“一声”“两声”“短促”“响亮”等细节。
+4. 不转录、翻译、引用、概括或暗示台词内容。“随后道歉”“提醒对方慢点”等对台词的概括同样禁止。
+5. 不描述人物身份、关系、心理、动机、剧情、背景音乐、环境噪声、地点、混响或录音条件。标签明确要求的拍手、鼓掌等事件仍须保留。
+6. 不输出英文标签、字段标题或属性清单，不使用“像是在……”“仿佛……”等推测表达。
+
+以下规则同属“严重警告”：
+
+对于标签之外的独立声音事件，默认不补充。只有音频中存在清楚、独立且能够明确区分类别的听觉证据时，才允许描述；听不清、仅疑似或类别不确定时一律不写。
+
+不得根据台词内容、情绪、跨度标签或示例推断额外事件。带笑语气不等于独立笑声，哭腔不等于独立哭声，气息感不等于独立吸气或喘息事件。
+
+提交前逐一检查 caption 中的每个独立声音事件：它是否有明确标签依据，或有明确的独立听觉证据？两者都没有的，必须删除。
+
+# 格式要求
+
+用一至两句自然、连贯的中文，通常为30—70字；事件较多时可以延长，完整保留标签优先于字数限制。
+
+前半部分自然描述声音、情绪和说话风格；后半部分串联标签规定的事件和位置。不堆砌名词、形容词，不用分号列举属性。
+
+表达示例，仅示范写法，不能照搬其中事实：
+- （中年男子用低沉略哑的嗓音缓慢说着，语气平静，说完后有咳嗽声。）
+- （年轻女性声音清亮，语调轻快，说话间夹有笑声。）
+- （男声低沉，语速较快，语气急切，说话间伴有吸气声。）
+- （年轻女性用柔和的嗓音平稳说着，开口前有吸鼻声，说完后传来拍手声。）
+
+提交前逐项核对：
+- 是否保留了全部独立事件类别？
+- 是否存在事件替换或未标注事件？
+- 位置是否按标签与实际讲话文字的关系确定？
+- 是否添加了无依据的次数、强弱或时长？
+- 是否泄露了台词语义？
+如有不符，先修正，再输出。
+
+只输出一个合法JSON对象，不输出Markdown、解释或检查过程：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}
+</pre></details><article><h2>01 · 哭腔 <small>crying</small></h2><audio controls preload="none" playsinline src="audio/019_crying.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;crying&gt;No one understands what a big opportunity this was for me.&lt;/crying&gt;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（年轻女性声音颤抖，语速缓慢，语气悲伤，说话间带有哭腔。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（年轻女性用颤抖的嗓音说着，语气中充满悲伤，说话间有明显的抽泣声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（年轻女性用颤抖的嗓音说着，语气中充满悲伤，说话间有明显的抽泣声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;crying&quot;
+  ],
+  &quot;sha256&quot;: &quot;92cca93286b72f936e0acae437db1c5432fc23dd3c55eafb63d502593ffb52a1&quot;
+}</pre></details></article>
+<article><h2>02 · 带笑说话 <small>laughing</small></h2><audio controls preload="none" playsinline src="audio/038_laughing.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;laughing&gt;I have an announcement.&lt;/laughing&gt; I have an announcement. It&#x27;s rather late, isn&#x27;t it?</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（年轻女性声音清亮，语速较快，情绪兴奋，说话间夹有笑声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（年轻女性用轻快的语调说着，语气中带着明显的愉悦感，开口前有笑声，说话间再次发出笑声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（年轻女性用轻快的语调说着，语气中带着明显的愉悦感，开口前有笑声，说话间再次发出笑声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;laughing&quot;
+  ],
+  &quot;sha256&quot;: &quot;45ae45b8d6403b1df141e07b88bbec0ee1bb8bed59c2c2c7328ddf34ba476758&quot;
+}</pre></details></article>
+<article><h2>03 · 耳语 <small>whispering</small></h2><audio controls preload="none" playsinline src="audio/092_whispering.mp3"></audio><details open><summary>实际带标签输入</summary><pre>...&lt;whispering&gt;most people don&#x27;t know is that one hundred and twenty-six copies were printed.&lt;/whispering&gt;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（男声用低沉平稳的嗓音缓慢说着，语气平静，说话间有耳语声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（男声以低沉平稳的语调说话，语气平静，开口前有一声轻柔的吸气声，说话间以耳语的方式说出内容。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（男声以低沉平稳的语调说话，语气平静，开口前有一声轻柔的吸气声，说话间以耳语的方式说出内容。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;whispering&quot;
+  ],
+  &quot;sha256&quot;: &quot;6e3a0e5fed4ab06d53f5a47b668a5b41c6b613405fa915b889d4517090ca648d&quot;
+}</pre></details></article>
+<article><h2>04 · 提高音量喊话 <small>shouting</small></h2><audio controls preload="none" playsinline src="audio/063_shouting.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;shouting&gt;What you&#x27;ve done, and the things that you&#x27;ve gone through, there is nothin&#x27; that can happen on a football field that we can&#x27;t overcome if we stay together.&lt;/shouting&gt;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（男声低沉，语速较快，语气坚定有力，说话间伴有喊叫声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（男声开口前有一声清嗓，随后用低沉有力的声音大喊着说，语气坚定，充满力量感。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（男声开口前有一声清嗓，随后用低沉有力的声音大喊着说，语气坚定，充满力量感。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;shouting&quot;
+  ],
+  &quot;sha256&quot;: &quot;4bee53a09a485d1426742a98996f8ba36a498ea6f535ced52a31d54f94070be3&quot;
+}</pre></details></article>
+<article><h2>05 · 结巴／重复 <small>stuttering</small></h2><audio controls preload="none" playsinline src="audio/076_stuttering.mp3"></audio><details open><summary>实际带标签输入</summary><pre>If Steve got convicted, he was going to jail. There was no question about it. And &lt;stuttering&gt;he… he&lt;/stuttering&gt; wasn&#x27;t gonna do well in jail, so he was very worried.</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（中年男子用低沉平稳的嗓音缓慢说着，语气严肃，说话间伴有结巴。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（中年男子用低沉平稳的嗓音缓慢说着，语气严肃，说话间有明显的口吃现象。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（中年男子用低沉平稳的嗓音缓慢说着，语气严肃，说话间有明显的口吃现象。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;stuttering&quot;
+  ],
+  &quot;sha256&quot;: &quot;853ac116d3365c031c713288c81546f75e6ebd20fcfd63aa038eb9148616fed0&quot;
+}</pre></details></article>
+<article><h2>06 · 气喘式说话 <small>breathless</small></h2><audio controls preload="none" playsinline src="audio/005_breathless.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;breathless&gt;It&#x27;s spreading so fast. Like it&#x27;s gonna swallow the whole city.&lt;/breathless&gt;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（年轻女性声音急促，语气惊慌，说话间气息急促。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（年轻女性气喘吁吁地说着，语速急促，语气惊慌，说话间有明显的喘息声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（年轻女性气喘吁吁地说着，语速急促，语气惊慌，说话间有明显的喘息声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;breathless&quot;
+  ],
+  &quot;sha256&quot;: &quot;14550be2f088fb65f6d39e49f8bf859c20fca095a1976767b90faf1837471267&quot;
+}</pre></details></article>
+<article><h2>07 · 哽咽 <small>choked_up</small></h2><audio controls preload="none" playsinline src="audio/013_choked_up.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;choked_up&gt;Mattie? Oh, God! Mattie. Oh, my God!&lt;/choked_up&gt; Come here.</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（男声语气急切，声音中带有哭腔，说话间有抽泣声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（男声开口前有倒吸气声，随后用哽咽着的语气急促地呼唤，说话间情绪激动，语速较快，音调起伏明显。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（男声开口前有倒吸气声，随后用哽咽着的语气急促地呼唤，说话间情绪激动，语速较快，音调起伏明显。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;choked_up&quot;
+  ],
+  &quot;sha256&quot;: &quot;0b320dbc7d04a56f5d2e259c4b808e0bf8ab32c861c833fe382bf5a7cd9f229a&quot;
+}</pre></details></article>
+<article><h2>08 · 声音颤抖 <small>trembling</small></h2><audio controls preload="none" playsinline src="audio/086_trembling.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;trembling&gt;Benevolent Bank and Trust. Nicole speaking. How can I help you?&lt;/trembling&gt;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（年轻女性用平稳柔和的嗓音说着，语气专业，说话间有颤抖声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（年轻女性用平稳清晰的声音说着，语气专业且平静，说话间有明显的颤抖声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（年轻女性用平稳清晰的声音说着，语气专业且平静，说话间有明显的颤抖声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;trembling&quot;
+  ],
+  &quot;sha256&quot;: &quot;22293a12ca27f199f8b843af1b6acc77c44fad68673d7d615ad68713bf4c2523&quot;
+}</pre></details></article>
+<article><h2>09 · 含混嘟囔 <small>mumbling</small></h2><audio controls preload="none" playsinline src="audio/043_mumbling.mp3"></audio><details open><summary>实际带标签输入</summary><pre>I opened the door and… &lt;mumbling&gt;ah&lt;/mumbling&gt; I said, &quot;What&#x27;s with all the guns?! Put those guns down! Please put them down! My baby&#x27;s here, my wife is here.&quot;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（中年男子声音低沉，语气急切，语速较快，说话间带有哭腔。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（中年男子用紧张急促的语气说着，声音略带颤抖，开口前有一声含糊的咕哝，说话间夹杂着急促的呼吸声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（中年男子用紧张急促的语气说着，声音略带颤抖，开口前有一声含糊的咕哝，说话间夹杂着急促的呼吸声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;mumbling&quot;
+  ],
+  &quot;sha256&quot;: &quot;f7d4d0cfaa563474de926b465a708ac675277ef2f93d3a61e5c9675f28dbf36f&quot;
+}</pre></details></article>
+<article><h2>10 · 歌唱式发声 <small>singing</small></h2><audio controls preload="none" playsinline src="audio/066_singing.mp3"></audio><details open><summary>实际带标签输入</summary><pre>&lt;singing&gt;Stand up and get crunk.&lt;/singing&gt;</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（男声以高亢有力的唱腔演唱，情绪激昂，说话间有歌声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（男声以中低音高演唱，情绪兴奋，节奏感强；演唱间有清嗓子声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（男声以中低音高演唱，情绪兴奋，节奏感强；演唱间有清嗓子声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;singing&quot;
+  ],
+  &quot;sha256&quot;: &quot;923f1da559b4cfa32b84a7d83c501a772a80fc6e66396e47bb5d30d168118286&quot;
+}</pre></details></article>
+<article><h2>11 · 独立哭声对照 <small>cry</small></h2><audio controls preload="none" playsinline src="audio/018_cry.mp3"></audio><details open><summary>实际带标签输入</summary><pre>在温暖的阳光下，心里却充满了阴霾[cry]。</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（男声低沉缓慢地说话，语气低落，说完后有哭声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（男声开口前有一声轻笑，随后用低沉缓慢的语调说着，语气平静，说话间有一声哭声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（男声开口前有一声轻笑，随后用低沉缓慢的语调说着，语气平静，说话间有一声哭声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;cry&quot;
+  ],
+  &quot;sha256&quot;: &quot;33a15635259877cd2f95586b5f583045a5dee86e779cf6bf55e616f399362df6&quot;
+}</pre></details></article>
+<article><h2>12 · 独立笑声对照 <small>laugh</small></h2><audio controls preload="none" playsinline src="audio/037_laugh.mp3"></audio><details open><summary>实际带标签输入</summary><pre>-We&#x27;re all friendly. Except him. He bites. -Shut up! [laugh] [laugh] Hey, boy! Turn off these quads and park them. Move it!</pre></details><div class="grid"><div class="old"><b>上一版：跨度说明＋额外事件限制</b><p>（男声低沉，语速较快，语气急促，说话间夹有笑声。）</p></div><div class="new"><b>本次：人工修改版 Prompt</b><p>（中年男子用低沉略带沙哑的嗓音说着，语气严厉，说话间有笑声，说完后有呼唤声。）</p></div></div><details><summary>原始输出与源记录</summary><pre>{&quot;caption&quot;:&quot;（中年男子用低沉略带沙哑的嗓音说着，语气严厉，说话间有笑声，说完后有呼唤声。）&quot;}
+{
+  &quot;tags&quot;: [
+    &quot;laugh&quot;,
+    &quot;laugh&quot;
+  ],
+  &quot;sha256&quot;: &quot;5a8527215d556166cee02a261a901f9bb60b7749caa583c5fc40222180bfe883&quot;
+}</pre></details></article>
+<script>for(const a of document.querySelectorAll("audio"))a.addEventListener("play",()=>{for(const b of document.querySelectorAll("audio"))if(a!==b)b.pause()});</script></html>
