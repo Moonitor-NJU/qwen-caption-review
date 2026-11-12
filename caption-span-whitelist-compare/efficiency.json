@@ -1,0 +1,110 @@
+{
+  "count": 12,
+  "old_mean_text_prompt_tokens": 3134,
+  "new_mean_text_prompt_tokens": 768.5833333333334,
+  "text_prompt_token_reduction_fraction": 0.7547596256115721,
+  "old_generation_seconds": 482.24770614900626,
+  "new_generation_seconds": 401.7876826139982,
+  "generation_time_reduction_fraction": 0.16684376619957897,
+  "timing_scope": "generation phase; excludes model loading and earlier CPU audio preprocessing",
+  "conditions": "same 12 original audio clips; same node34 two GPUs; BF16 CPU offload; greedy; batch1",
+  "limitation": "whole prompt revision and different output lengths; not an isolated category-table ablation or repeated performance benchmark",
+  "per_item": [
+    {
+      "target": "crying",
+      "prompt_tokens": 757,
+      "previous_prompt_tokens": 3122,
+      "input_tokens": 823,
+      "generated_tokens": 27,
+      "seconds": 38.712673644011375
+    },
+    {
+      "target": "laughing",
+      "prompt_tokens": 766,
+      "previous_prompt_tokens": 3132,
+      "input_tokens": 875,
+      "generated_tokens": 24,
+      "seconds": 32.76727667002706
+    },
+    {
+      "target": "whispering",
+      "prompt_tokens": 770,
+      "previous_prompt_tokens": 3131,
+      "input_tokens": 849,
+      "generated_tokens": 25,
+      "seconds": 33.90282696898794
+    },
+    {
+      "target": "shouting",
+      "prompt_tokens": 785,
+      "previous_prompt_tokens": 3148,
+      "input_tokens": 917,
+      "generated_tokens": 19,
+      "seconds": 28.016652478952892
+    },
+    {
+      "target": "stuttering",
+      "prompt_tokens": 789,
+      "previous_prompt_tokens": 3151,
+      "input_tokens": 935,
+      "generated_tokens": 23,
+      "seconds": 32.005399677029345
+    },
+    {
+      "target": "breathless",
+      "prompt_tokens": 771,
+      "previous_prompt_tokens": 3129,
+      "input_tokens": 842,
+      "generated_tokens": 26,
+      "seconds": 34.69849235797301
+    },
+    {
+      "target": "choked_up",
+      "prompt_tokens": 768,
+      "previous_prompt_tokens": 3132,
+      "input_tokens": 864,
+      "generated_tokens": 24,
+      "seconds": 32.50959451298695
+    },
+    {
+      "target": "trembling",
+      "prompt_tokens": 762,
+      "previous_prompt_tokens": 3128,
+      "input_tokens": 833,
+      "generated_tokens": 26,
+      "seconds": 34.65976571000647
+    },
+    {
+      "target": "mumbling",
+      "prompt_tokens": 789,
+      "previous_prompt_tokens": 3151,
+      "input_tokens": 922,
+      "generated_tokens": 29,
+      "seconds": 37.752704067970626
+    },
+    {
+      "target": "singing",
+      "prompt_tokens": 753,
+      "previous_prompt_tokens": 3118,
+      "input_tokens": 814,
+      "generated_tokens": 21,
+      "seconds": 29.784701295022387
+    },
+    {
+      "target": "cry",
+      "prompt_tokens": 744,
+      "previous_prompt_tokens": 3120,
+      "input_tokens": 832,
+      "generated_tokens": 26,
+      "seconds": 34.7660478510079
+    },
+    {
+      "target": "laugh",
+      "prompt_tokens": 769,
+      "previous_prompt_tokens": 3146,
+      "input_tokens": 934,
+      "generated_tokens": 23,
+      "seconds": 32.012304576986935
+    }
+  ]
+}
