@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qwen Caption · Prompt 迭代记录</title><meta name="description" content="按迭代顺序审阅完整提示词、原音与实际caption，支持同一原音跨版本对照。"><link rel="stylesheet" href="styles.css"></head>
+<body id="top"><div class="page">
+<aside class="sidebar"><a class="brand" href="#top"><span class="brand-mark">C</span><span>CAPTION LAB<small>Prompt 迭代记录</small></span></a><p class="nav-label">按版本跳转</p><nav aria-label="提示词版本目录"><a href="#span-rules"><span>01</span>跨度标签说明版</a><a href="#manual-revision"><span>02</span>人工修订版</a><a href="#tag-only"><span>03</span>完整类别表＋禁止额外事件</a><a href="#whitelist"><span>04</span>精简 Prompt＋本条白名单</a><a href="#action-style"><span>05</span>自然动作叙述版</a></nav><div class="side-note">新版本追加在末尾。<br>已有 Prompt 与模型输出保留。<a href="#comparison">同一原音跨版本对照 →</a></div></aside>
+<main><header class="hero"><p class="eyebrow">QWEN AUDIO CAPTION / 版本记录</p><h1>Caption 标注<br>Prompt 迭代记录</h1><p class="intro">把每一轮改动、实际输出和观察放在同一页。先看同一条原音如何变化，再按版本展开完整提示词与试听样例。</p><div class="stats"><span><b>5</b> 个版本</span><span><b>4</b> 版已有实际输出</span><span><b>36</b> 条不重复原音</span></div><p class="scope">更新于 2026-11-13 · 收录近期跨度标签修订以来的提示词迭代；不是整个项目全部历史版本。</p></header>
+<section class="comparison" id="comparison"><div class="section-heading"><p class="eyebrow">同样本对照</p><h2>同一原音，各版怎样描述？</h2><p>这里只比较至少两版共有的样本。播放的是数据集原音，下面的文字是各轮真实 Caption，不是 TTS 生成语音。</p></div><label class="field-label" for="compare-select">选择原音</label><select id="compare-select"><option value="crying-92cca93286b7">哭腔 · crying</option><option value="laughing-45ae45b8d640">带笑说话 · laughing</option><option value="whispering-6e3a0e5fed4a" selected>耳语 · whispering</option><option value="shouting-4bee53a09a48">大声喊话 · shouting</option><option value="stuttering-853ac116d336">口吃式说话 · stuttering</option><option value="breathless-14550be2f088">气喘式说话 · breathless</option><option value="choked_up-0b320dbc7d04">哽咽式说话 · choked_up</option><option value="trembling-22293a12ca27">颤抖式说话 · trembling</option><option value="mumbling-f7d4d0cfaa56">含混嘟囔 · mumbling</option><option value="singing-923f1da559b4">唱腔／歌唱 · singing</option><option value="cry-33a156352598">哭声 · cry</option><option value="laugh-5a8527215d55">笑声 · laugh</option></select><audio id="compare-audio" controls preload="none" playsinline></audio><details class="input-panel"><summary>查看原带标签文本</summary><pre id="compare-input"></pre></details><div id="compare-captions" class="compare-grid"></div><p id="load-status" class="load-status" role="status">正在载入迭代数据…</p></section>
+<div class="reading-note"><b>怎样读这份记录</b><p>各版的额外事件规则不同，不能用最新规则反推全部旧输出。备注只核对标签与文字，不等于原音内容已人工验真；历史运行条件也并非全部一致。最新“动作叙述版”目前只有提示词，尚未生成。</p></div>
+<section class="revision" id="span-rules"><div class="section-top"><span class="index">01</span><div><p class="date">2026-11-12</p><h2>跨度标签说明版</h2></div><span class="badge issues">已有输出 · 仍有问题</span></div><div class="summary-grid"><div><h3>这一版改了什么</h3><p>在事件类别中解释跨度标签，把哭腔、带笑、耳语等与独立事件区分；标签外事件只允许在听觉证据明确时补充。</p></div><div><h3>当时观察到什么</h3><p>部分跨度表达得到改善，但仍有“耳语声”“颤抖声”等事件式句型，也存在跨度遗漏。此版允许额外听到的事件，不能把所有标签外输出直接判错。</p></div></div><details class="prompt-panel"><summary>展开本版完整 Prompt</summary><div class="prompt-toolbar"><button class="copy-prompt" data-version="span-rules">复制完整 Prompt</button><span class="copy-status" role="status"></span></div><pre># 任务描述
+
+你是一位专业的音频信息分析专家。请根据音频和带标签文本，生成一段简短、自然的中文声音描述，用作语音生成模型的 instruction。
+
+本任务中，两种输入有不同的决定权：
+- 声音特征和情绪：仅根据音频判断。说话风格以音频为依据，并按下文规则表达已提供的跨度标签。
+- 已标注副语言事件的类别、是否出现及粗略位置：严格采用文本标签，不根据音频重新判断。
+
+事件标签是本任务要求保留的标注，不是待核查的候选。即使你从音频中听出了不同事件，也不得替换已有事件标签。标签之外的事件只按“严重警告”中的明确听觉证据规则处理。
+
+# 识别对象
+
+仅从音频中提取显著的声音特征、情绪和说话风格：
+1. 声音特征：性别、大致年龄段、音高及显著音色。
+2. 情绪状态：实际可听出的主要情绪及强度。
+3. 说话风格：语速、节奏、语调及明显的表达方式。
+
+能够判断时，用“年轻女性”“中年男子”等称呼自然起句；无法确定年龄时使用“男声”“女声”等称呼。不猜测精确年龄，不为凑齐维度补充信息。
+
+不得根据正文含义或事件标签推断上述特征。例如，正文写“吃撑了”不能据此描述“饱胀感”；出现 cry 标签不能据此认定整句声音悲伤。
+
+# 补充信息
+
+带标签文本：
+{{TAGGED_TEXT}}
+
+请先在内部整理标签约束，再生成描述，不输出整理过程。
+
+## 事件类别
+
+- 每个独立事件标签都必须在 caption 中得到明确表达。
+- 使用准确的中文事件名称，可以自然串联，但不得改变事件类别。
+- 不得用情绪、语气或笼统的“气息声”“声音变化”替代具体事件。
+- 标签之外的独立声音事件默认不补充；只有明确的独立听觉证据才允许补充，具体遵守“严重警告”。
+- 不得用一个事件覆盖另一个事件；不同类别的标签必须分别保留。
+
+必须区分：
+- cough＝咳嗽，throat_clearing／throat clearing＝清嗓，不能互换。
+- cry＝哭声，sob＝抽泣，laugh＝笑声，不能互换。
+- sniff＝吸鼻，inhale＝吸气，exhale＝呼气，gasp＝倒吸气，pant＝喘息，不能互换。
+- burp＝嗳气或饱嗝，hiccup＝呃逆，不能互换。
+- clap＝拍手，applause＝鼓掌，不能改成咳嗽、清嗓或其他声音。
+- 不得将旧中文标签“不满”解释为 burp。
+
+尖括号包裹台词的跨度标签，描述的是这段讲话的发声方式：
+- &lt;crying&gt;……&lt;/crying&gt;：说话带有哭腔。
+- &lt;laughing&gt;……&lt;/laughing&gt;：带着笑意说话。
+- &lt;whispering&gt;……&lt;/whispering&gt;：轻声耳语。
+- &lt;shouting&gt;……&lt;/shouting&gt;：提高音量喊着说话。
+- &lt;stuttering&gt;……&lt;/stuttering&gt;：说话有明显结巴或重复。
+- &lt;breathless&gt;……&lt;/breathless&gt;：说话气息急促、带有气喘感。
+
+将跨度标签自然融入对应讲话的风格描述，不将其改写成独立声音事件，也不据此编造“开口前哭泣”“说完后发笑”等事件及位置。其他跨度标签同样按其发声方式解释。
+
+方括号中的独立事件标签，按规定的事件类别和粗略位置保留，不替换、不遗漏。
+
+## 事件位置
+
+只使用“开口前”“说话间”“说完后”等粗略位置：
+
+- 标签前没有实际讲话内容、后面有讲话内容：开口前。
+- 标签前后都有实际讲话内容：说话间。
+- 标签前有讲话内容、后面没有实际讲话内容：说完后。
+- 判断时忽略标点、空格、换行和其他标签。标签后只有句号或逗号，不代表后面还有讲话。
+- 同类事件出现在多个位置时，保留这些位置；同一位置的重复标签可以合并描述。
+- 没有讲话时，只描述事件及其先后关系，不虚构讲话。
+- 不根据音频移动标签位置，不写时间戳或具体词语位置。
+
+# 严重警告
+
+1. 禁止根据音频将 cough 改成清嗓、cry 改成笑声、clap 改成清嗓，或进行其他事件替换。
+2. 没有标签依据的独立声音事件，只有明确听到且能够明确区分类别时才允许补充，不得根据风格或台词推断。
+3. 标签没有提供的次数、时长和强弱，不得补写。单个标签不等于明确标注“一声”，不要习惯性添加“一声”“两声”“短促”“响亮”等细节。
+4. 不转录、翻译、引用、概括或暗示台词内容。“随后道歉”“提醒对方慢点”等对台词的概括同样禁止。
+5. 不描述人物身份、关系、心理、动机、剧情、背景音乐、环境噪声、地点、混响或录音条件。标签明确要求的拍手、鼓掌等事件仍须保留。
+6. 不输出英文标签、字段标题或属性清单，不使用“像是在……”“仿佛……”等推测表达。
+
+以下规则同属“严重警告”：
+
+对于标签之外的独立声音事件，默认不补充。只有音频中存在清楚、独立且能够明确区分类别的听觉证据时，才允许描述；听不清、仅疑似或类别不确定时一律不写。
+
+不得根据台词内容、情绪、跨度标签或示例推断额外事件。带笑语气不等于独立笑声，哭腔不等于独立哭声，气息感不等于独立吸气或喘息事件。
+
+提交前逐一检查 caption 中的每个独立声音事件：它是否有明确标签依据，或有明确的独立听觉证据？两者都没有的，必须删除。
+
+# 格式要求
+
+用一至两句自然、连贯的中文，通常为30—70字；事件较多时可以延长，完整保留标签优先于字数限制。
+
+前半部分自然描述声音、情绪和说话风格；后半部分串联标签规定的事件和位置。不堆砌名词、形容词，不用分号列举属性。
+
+表达示例，仅示范写法，不能照搬其中事实：
+- （中年男子用低沉略哑的嗓音缓慢说着，语气平静，说完后有咳嗽声。）
+- （年轻女性声音清亮，语调轻快，说话间夹有笑声。）
+- （男声低沉，语速较快，语气急切，说话间伴有吸气声。）
+- （年轻女性用柔和的嗓音平稳说着，开口前有吸鼻声，说完后传来拍手声。）
+
+提交前逐项核对：
+- 是否保留了全部独立事件类别？
+- 是否存在事件替换或未标注事件？
+- 位置是否按标签与实际讲话文字的关系确定？
+- 是否添加了无依据的次数、强弱或时长？
+- 是否泄露了台词语义？
+如有不符，先修正，再输出。
+
+只输出一个合法JSON对象，不输出Markdown、解释或检查过程：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}
+</pre></details><details class="samples-panel" data-version="span-rules"><summary>展开本版 12 条原音与 Caption</summary><div class="sample-content"></div></details><a class="archive" href="https://moonitor-nju.github.io/qwen-caption-review/caption-span-compare/" target="_blank" rel="noopener">打开原独立试听页 ↗</a><a class="back-top" href="#top">回到目录 ↑</a></section><section class="revision" id="manual-revision"><div class="section-top"><span class="index">02</span><div><p class="date">2026-11-12</p><h2>人工修订版</h2></div><span class="badge issues">已有输出 · 仍有问题</span></div><div class="summary-grid"><div><h3>这一版改了什么</h3><p>采用人工修改的完整提示词，保留完整类别表与跨度说明；仍允许明确听到的标签外独立事件。</p></div><div><h3>当时观察到什么</h3><p>多条输出补出吸气、清嗓、抽泣等标签外事件。仅凭文字无法确定原音是否存在这些声音，但这种开放增补不符合后续严格按标签标注的目标。</p></div></div><details class="prompt-panel"><summary>展开本版完整 Prompt</summary><div class="prompt-toolbar"><button class="copy-prompt" data-version="manual-revision">复制完整 Prompt</button><span class="copy-status" role="status"></span></div><pre># 任务描述
+你是一位专业的音频信息分析专家。请根据输入音频和带标签文本，生成一段简短、自然的中文声音描述，用作语音生成模型的 instruction。你只能基于当前音频片段的听觉信号进行标注，不得引用无法通过声音感知的信息。你的核心准则是「先听后判」，所有标签必须以听觉证据为第一优先级。
+两种输入的用途必须严格区分：
+	•	音频：用于判断声音特征、情绪和说话风格。
+	•	带标签文本：仅用于提取已标注的副语言事件、说话方式及其粗粒度发生位置。
+# 识别对象
+仅根据当前音频中实际可听到的声音，描述以下显著特征，不必逐项罗列：
+	1	声音特征：男声或女声、大致年龄段、音高及显著音色特点。
+	2	情绪状态：如开心、悲伤、兴奋、愤怒、平静，以及能够明确听出的强度。
+	3	说话风格：语速、节奏、语调及明显的表达方式。
+性别和年龄段能够判断时，用“年轻女性”“中年男子”等自然称呼作主语；无法确定时使用“男声”“女声”等较稳妥的称呼。不要猜测精确年龄，也不要为凑齐维度补充不明显的特征。
+# 补充信息
+下面提供带有副语言事件标签的文本：
+{{TAGGED_TEXT}}
+使用规则：
+	1	将其中的有效事件标签作为本任务已提供的、客观存在的事件标注，不重新判断事件是否存在，不擅自删除、替换或增加事件类别。
+	2	正文仅用于判断标签与讲话的先后关系，不得用于推断声音特征、情绪、说话风格、人物身份或场景。
+	3	位置利用正文标签与讲话的先后关系，描述为“开口前”“说话间”“说完后”等。标签位于正文之前、正文中间或正文之后时，分别采用对应位置；同类事件分布在多个位置时可以合并表述。
+	4	不引用标签附近的词句，不描述事件发生在某个具体词语之前或之后，不输出时间戳。标签未明确提供的次数、时长、强弱和动作细节不要补写。
+	5	无有效事件标签时，只描述音频中的声音特征、情绪和说话风格，不自行补充副语言事件。
+## 事件类别
+
+参考新标签体系：
+
+一级大类 (Primary)
+二级分类 (Sub-category)
+中文动作描述 
+规范英文标签 (Standard English Tag)
+audio
+A. 生理与呼吸
+呼吸 (Breath)
+呼吸
+[breath]
+
+吸气
+[inhale]
+
+呼气
+[exhale]
+
+急促呼吸
+[rapid_breath]
+
+喘类 (Pant/Wheeze)
+喘息（张口急促，无声带振动）
+[pant]
+
+喘鸣（气道收缩高频音）
+[wheeze]
+
+倒吸气 (Gasp)
+倒吸凉气/惊气
+[gasp]
+
+鼻腔 (Nasal)
+嗅闻
+[sniff]
+
+吸鼻子
+[sniffle]
+
+喷鼻息
+[snort]
+
+擤鼻涕
+[nose_blowing]
+1
+喉部生理 (Vocal Tract)
+咳嗽
+[cough]
+
+清嗓子
+[throat_clearing]
+
+打喷嚏
+[sneeze]
+
+打哈欠
+[yawn]
+
+打鼾
+[snore]
+
+抽嗝
+[hiccup]
+
+饱嗝
+[burp]
+
+叹气
+[sigh]
+
+呕吐 (Retch)
+真实呕吐
+[vomit]
+1
+干呕
+[retch]
+1
+口腔清理 (Clearance)
+啐/吐口水
+[spit]
+
+咽口水 (大口)
+[gulp]
+
+吞咽
+[swallow]
+
+B. 嘴部与器官
+咂嘴 (Lipsmack)
+咂嘴 / 吧唧嘴
+[lip_smack]
+
+啧声 (Tsk)
+单次啧声
+[tsk]
+
+连续啧啧声 / 舌头咯咯声
+[cluck]
+
+嘶声 (Hiss)
+嘶声 / 倒吸气摩擦
+[hiss]
+
+口哨 (Whistle)
+吹口哨
+[whistle]
+
+亲吻 (Kiss)
+吧唧亲吻声 (物理接触)
+[kiss]
+1
+飞吻声 (空气爆破)
+[mock_kiss]
+
+吹气 (Blow)
+吹气
+[blow]
+
+咀嚼 (Chew)
+咀嚼
+[chew]
+1
+吸溜 (Slurp)
+吸溜声 (伴随水分)
+[slurp]
+
+舔舐 (Lick)
+舔舐声
+[lick]
+1
+唇颤音 (Lip Trill)
+闭口双唇纯吹气 / 噗噜噜
+[lip_trill]
+
+舌唇颤音 (Raspberry)
+吐舌头纯吹气 / 淘气噗声
+[raspberry]
+
+颤舌音 (Tongue Flutter)
+伴声带震动的快速 / 略略略
+[tongue_fluttering]
+
+牙齿 (Teeth)
+牙齿打颤
+[teeth_chattering]
+1
+磨牙
+[teeth_grinding]
+1
+C. 体能与宣泄
+笑声 (Laugh)
+常规笑
+[laugh]
+
+轻笑
+[chuckle]
+
+咯咯笑
+[giggle]
+
+窃笑
+[snicker]
+
+嗤笑
+[scoff]
+
+哭声 (Cry)
+哭泣
+[cry]
+
+呜咽 (压抑)
+[whimper]
+
+抽泣 (伴随呼吸痉挛)
+[sob]
+
+哀号 (嚎啕大哭)
+[wail]
+
+抱怨 (Whine)
+哀鸣 / 撒娇式抱怨
+[whine]
+
+呻吟 (Moan/Groan)
+沉闷呻吟 / 痛苦发力
+[groan]
+
+闷哼 (Grunt)
+闷哼声 / 短促发力
+[grunt]
+
+呼喊 (Vocalize)
+尖叫
+[scream]
+
+咆哮
+[roar]
+
+大喊 / 呼唤
+[shout]
+
+D. 认知与交互
+满足 (Satisfaction)
+表达好吃的“嗯~”
+[satisfaction-hmm]
+
+喝完酒爽快的“啊~”
+[satisfaction-ah]
+
+满足大类占位符
+[satisfaction-X]
+
+迟疑 (Hesitation)
+迟疑：啊…
+[hesitation-ah]
+
+迟疑：呃…
+[hesitation-uh]
+
+迟疑：嗯...
+[hesitation-hmm]
+
+迟疑大类占位符
+[hesitation-X]
+
+应答 (Response)
+应答：降调嗯
+[response-hmm]
+
+应答：降调哦
+[response-oh]
+
+应答：平调啊
+[response-ah]
+
+应答大类占位符
+[response-X]
+
+呼唤 (Call)
+呼唤：喂
+[call-wei]
+
+呼唤：嘿
+[call-hey]
+
+呼唤：诶
+[call-ei]
+
+呼唤：
+[call-oi]
+
+呼唤大类占位符
+[call-X]
+
+疑问 (Questioning)
+升调疑惑：嗯?
+[question-hmm]
+
+升调疑惑：啊?
+[question-ah]
+
+升调疑惑：咦?
+[question-yi]
+
+升调疑惑：哦?
+[question-oh]
+
+升调疑惑：哈?
+[question-huh]
+
+升调疑惑：诶？
+[question-ei]
+
+疑问大类占位符
+[question-X]
+
+惊讶 (Surprise)
+突发惊叹：啊!
+[surprise-ah]
+
+突发惊叹：哇!
+[surprise-wow]
+
+恍然大悟：哦!
+[surprise-oh]
+
+突发惊叹：哟！
+[surprise-yo]
+
+惊讶大类占位符
+[surprise-X]
+
+不满 (Disapproval)
+冷哼
+[disapproval-hmph]
+
+轻蔑地“切”
+[disapproval-qie]
+
+厌恶“咦”
+[disapproval-yi]
+
+厌恶的拟声呕吐
+[disapproval-eww]
+
+不满大类占位符
+[disapproval-X]
+
+嘘声 (Shush)
+要求安静的嘘声
+[shush]
+
+倒彩 (Boo)
+喝倒彩 / 群体嘘声
+[boo]
+
+E. 音乐与群体
+音乐 (Music)
+哼唱
+[hum]
+
+鼓掌 (Applause)
+零星拍手
+[clap]
+
+群体鼓掌
+[applause]
+1
+欢呼 (Cheer)
+欢呼
+[cheer]
+
+F. 腔调 (跨度标签)
+说话状态 (Speaking Style)
+笑着说
+&lt;laughing&gt; ... &lt;/laughing&gt;
+
+哭着说
+&lt;crying&gt; ... &lt;/crying&gt;
+
+哽咽着说
+&lt;choked_up&gt; ... &lt;/choked_up&gt;
+
+大喊着说
+&lt;shouting&gt; ... &lt;/shouting&gt;
+
+气喘吁吁地说
+&lt;breathless&gt; ... &lt;/breathless&gt;
+
+耳语着说 / 气声
+&lt;whispering&gt; ... &lt;/whispering&gt;
+
+唱歌 / 唱腔
+&lt;singing&gt; ... &lt;/singing&gt;
+
+含糊咕哝着说
+&lt;mumbling&gt; ... &lt;/mumbling&gt;
+
+口吃/结巴着说
+&lt;stuttering&gt; ... &lt;/stuttering&gt;
+
+颤抖着说
+&lt;trembling&gt; ... &lt;/trembling&gt;
+
+
+
+- 每个独立事件标签都必须在 caption 中得到明确表达。
+- 使用准确的中文事件名称，可以自然串联，但不得改变事件类别。
+- 不得用情绪、语气或笼统的“气息声”“声音变化”替代具体事件。
+- 标签之外的独立声音事件默认不补充；只有明确的独立听觉证据才允许补充，具体遵守“严重警告”。
+- 不得用一个事件覆盖另一个事件；不同类别的标签必须分别保留。
+
+必须区分：
+- cough＝咳嗽，throat_clearing／throat clearing＝清嗓，不能互换。
+- cry＝哭声，sob＝抽泣，laugh＝笑声，不能互换。
+- sniff＝吸鼻，inhale＝吸气，exhale＝呼气，gasp＝倒吸气，pant＝喘息，不能互换。
+- burp＝嗳气或饱嗝，hiccup＝呃逆，不能互换。
+- clap＝拍手，applause＝鼓掌，不能改成咳嗽、清嗓或其他声音。
+
+尖括号包裹台词的跨度标签，描述的是这段讲话的发声方式：
+- &lt;crying&gt;……&lt;/crying&gt;：说话带有哭腔。
+- &lt;laughing&gt;……&lt;/laughing&gt;：带着笑意说话。
+- &lt;whispering&gt;……&lt;/whispering&gt;：以轻声耳语的方式说。
+- &lt;shouting&gt;……&lt;/shouting&gt;：提高音量喊着说。
+- &lt;stuttering&gt;……&lt;/stuttering&gt;：说话时有明显结巴或重复。
+- &lt;breathless&gt;……&lt;/breathless&gt;：说话时气息急促、带有气喘感。
+还有更多类似的跨度标签，请你参考上面的说法来表述
+
+将跨度标签自然融入对应讲话的风格描述，不将其改写成独立声音事件，也不据此编造“开口前哭泣”“说完后发笑”等事件及位置。其他跨度标签同样按其发声方式解释。
+
+方括号中的独立事件标签，按规定的事件类别和粗略位置保留，不替换、不遗漏。
+
+## 事件位置
+
+只使用“开口前”“说话间”“说完后”等粗略位置：
+
+- 标签前没有实际讲话内容、后面有讲话内容：开口前。
+- 标签前后都有实际讲话内容：说话间。
+- 标签前有讲话内容、后面没有实际讲话内容：说完后。
+- 判断时忽略标点、空格、换行和其他标签。标签后只有句号或逗号，不代表后面还有讲话。
+- 同类事件出现在多个位置时，保留这些位置；同一位置的重复标签可以合并描述。
+- 没有讲话时，只描述事件及其先后关系，不虚构讲话。
+- 不根据音频移动标签位置，不写时间戳或具体词语位置
+
+# 严重警告
+	•	不得根据正文的词义、剧情或事件标签推断情绪。例如，台词提到悲伤不代表声音悲伤，出现哭声标签也不代表整句都带哭腔；这些特征必须从音频中独立判断。
+	•	不转录、翻译、引用、概括或暗示台词内容，不透露人物关系、谈话主题、行为目的或故事情节。
+	•	不描述背景音乐、环境噪声、地点、录音条件、混响或空间感。若标签明确标注鼓掌、拍手等目标事件，仍需保留该事件。
+	•	不混淆事件类别：吸气不等于吸鼻，清嗓不等于咳嗽，嗳气或饱嗝不等于呃逆。
+	•	不输出英文标签、字段标题、属性清单或分析过程，不使用“像是在……”“仿佛……”等推测性表述。
+	•	对于标签之外的独立声音事件，默认不补充。只有音频中存在清楚、独立且能够明确区分类别的听觉证据时，才允许描述；听不清、仅疑似或类别不确定时一律不写。提交前逐一检查 caption 中的每个独立声音事件：它是否有明确标签依据，或有明确的独立听觉证据？两者都没有的，必须删除。
+# 格式要求
+	1	用一至两句连贯、自然的中文描述，通常为30—70字；事件较多时可适当延长，不为压缩长度遗漏已标注事件。
+	2	前半部分自然串联人物声音、主要情绪和说话风格；后半部分融入副语言事件及其粗略位置。避免以逗号、分号堆砌名词和形容词。
+	3	多个说话人能够从音频中清楚区分时，可以分别简述；无法确定事件归属时，不将事件强行归于某个说话人。
+	4	只有声音事件、没有讲话时，直接描述事件，不虚构讲话或说话风格。
+	5	使用中文全角标点，整段描述用中文圆括号包裹。
+以下示例仅说明表达方式，不得照搬其中事实：
+	•	（中年男子开口前有一声轻咳，然后用低沉略哑的嗓音缓慢说着，语气平静。）
+	•	（年轻女性用清亮的声音说着，语调轻快，带着明显的愉悦感，说话间夹有笑声。）
+	•	（年轻女性用柔和的嗓音平稳地说着，语气自然，开口前有吸鼻声，说话间有一声清嗓声。）
+提交前检查：声音特征是否仅来自音频；是否完整保留有效事件标签及粗略位置；是否泄露台词语义；是否添加了无依据的细节。
+只输出一个合法JSON对象，不输出Markdown或额外解释：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}</pre></details><details class="samples-panel" data-version="manual-revision"><summary>展开本版 12 条原音与 Caption</summary><div class="sample-content"></div></details><a class="archive" href="https://moonitor-nju.github.io/qwen-caption-review/caption-span-manual-compare/" target="_blank" rel="noopener">打开原独立试听页 ↗</a><a class="back-top" href="#top">回到目录 ↑</a></section><section class="revision" id="tag-only"><div class="section-top"><span class="index">03</span><div><p class="date">2026-11-12</p><h2>完整类别表＋禁止额外事件</h2></div><span class="badge issues">已有输出 · 仍有问题</span></div><div class="summary-grid"><div><h3>这一版改了什么</h3><p>保留完整类别表，明确禁止补充标签外事件；其他框架延续人工修订版。</p></div><div><h3>当时观察到什么</h3><p>12条文字核对中8条存在标签遵循问题，包含新增独立事件、跨度事件化或新增位置。耳语样本仍补出“开口前有一声轻咳”。</p></div></div><details class="prompt-panel"><summary>展开本版完整 Prompt</summary><div class="prompt-toolbar"><button class="copy-prompt" data-version="tag-only">复制完整 Prompt</button><span class="copy-status" role="status"></span></div><pre># 任务描述
+你是一位专业的音频信息分析专家。请根据输入音频和带标签文本，生成一段简短、自然的中文声音描述，用作语音生成模型的 instruction。你只能基于当前音频片段的听觉信号进行标注，不得引用无法通过声音感知的信息。
+两种输入的用途必须严格区分：
+- 音频：用于判断声音特征、情绪和说话风格。
+- 带标签文本：仅用于提取已标注的副语言事件、说话方式及其粗粒度发生位置。
+# 识别对象
+仅根据当前音频中实际可听到的声音，描述以下显著特征，不必逐项罗列：
+1. 声音特征：男声或女声、大致年龄段、音高及显著音色特点。
+2. 情绪状态：如开心、悲伤、兴奋、愤怒、平静，以及能够明确听出的强度。
+3. 说话风格：语速、节奏、语调及明显的表达方式。
+性别和年龄段能够判断时，用“年轻女性”“中年男子”等自然称呼作主语；无法确定时使用“男声”“女声”等较稳妥的称呼。不要猜测精确年龄，也不要为凑齐维度补充不明显的特征。
+# 补充信息
+下面提供带有副语言事件标签的文本：
+{{TAGGED_TEXT}}
+使用规则：
+1. 将其中的有效事件标签作为本任务已提供的、客观存在的事件标注，不重新判断事件是否存在，不擅自删除、替换或增加事件类别。
+2. 正文仅用于判断标签与讲话的先后关系，不得用于推断声音特征、情绪、说话风格、人物身份或场景。
+3. 位置利用正文标签与讲话的先后关系，描述为“开口前”“说话间”“说完后”等。标签位于正文之前、正文中间或正文之后时，分别采用对应位置；同类事件分布在多个位置时可以合并表述。
+4. 不引用标签附近的词句，不描述事件发生在某个具体词语之前或之后，不输出时间戳。标签未明确提供的次数、时长、强弱和动作细节不要补写。
+5. 无有效事件标签时，只描述音频中的声音特征、情绪和说话风格，不自行补充副语言事件。
+## 事件类别
+
+参考新标签体系：
+
+一级大类 (Primary)
+二级分类 (Sub-category)
+中文动作描述 
+规范英文标签 (Standard English Tag)
+audio
+A. 生理与呼吸
+呼吸 (Breath)
+呼吸
+[breath]
+
+吸气
+[inhale]
+
+呼气
+[exhale]
+
+急促呼吸
+[rapid_breath]
+
+喘类 (Pant/Wheeze)
+喘息（张口急促，无声带振动）
+[pant]
+
+喘鸣（气道收缩高频音）
+[wheeze]
+
+倒吸气 (Gasp)
+倒吸凉气/惊气
+[gasp]
+
+鼻腔 (Nasal)
+嗅闻
+[sniff]
+
+吸鼻子
+[sniffle]
+
+喷鼻息
+[snort]
+
+擤鼻涕
+[nose_blowing]
+1
+喉部生理 (Vocal Tract)
+咳嗽
+[cough]
+
+清嗓子
+[throat_clearing]
+
+打喷嚏
+[sneeze]
+
+打哈欠
+[yawn]
+
+打鼾
+[snore]
+
+抽嗝
+[hiccup]
+
+饱嗝
+[burp]
+
+叹气
+[sigh]
+
+呕吐 (Retch)
+真实呕吐
+[vomit]
+1
+干呕
+[retch]
+1
+口腔清理 (Clearance)
+啐/吐口水
+[spit]
+
+咽口水 (大口)
+[gulp]
+
+吞咽
+[swallow]
+
+B. 嘴部与器官
+咂嘴 (Lipsmack)
+咂嘴 / 吧唧嘴
+[lip_smack]
+
+啧声 (Tsk)
+单次啧声
+[tsk]
+
+连续啧啧声 / 舌头咯咯声
+[cluck]
+
+嘶声 (Hiss)
+嘶声 / 倒吸气摩擦
+[hiss]
+
+口哨 (Whistle)
+吹口哨
+[whistle]
+
+亲吻 (Kiss)
+吧唧亲吻声 (物理接触)
+[kiss]
+1
+飞吻声 (空气爆破)
+[mock_kiss]
+
+吹气 (Blow)
+吹气
+[blow]
+
+咀嚼 (Chew)
+咀嚼
+[chew]
+1
+吸溜 (Slurp)
+吸溜声 (伴随水分)
+[slurp]
+
+舔舐 (Lick)
+舔舐声
+[lick]
+1
+唇颤音 (Lip Trill)
+闭口双唇纯吹气 / 噗噜噜
+[lip_trill]
+
+舌唇颤音 (Raspberry)
+吐舌头纯吹气 / 淘气噗声
+[raspberry]
+
+颤舌音 (Tongue Flutter)
+伴声带震动的快速 / 略略略
+[tongue_fluttering]
+
+牙齿 (Teeth)
+牙齿打颤
+[teeth_chattering]
+1
+磨牙
+[teeth_grinding]
+1
+C. 体能与宣泄
+笑声 (Laugh)
+常规笑
+[laugh]
+
+轻笑
+[chuckle]
+
+咯咯笑
+[giggle]
+
+窃笑
+[snicker]
+
+嗤笑
+[scoff]
+
+哭声 (Cry)
+哭泣
+[cry]
+
+呜咽 (压抑)
+[whimper]
+
+抽泣 (伴随呼吸痉挛)
+[sob]
+
+哀号 (嚎啕大哭)
+[wail]
+
+抱怨 (Whine)
+哀鸣 / 撒娇式抱怨
+[whine]
+
+呻吟 (Moan/Groan)
+沉闷呻吟 / 痛苦发力
+[groan]
+
+闷哼 (Grunt)
+闷哼声 / 短促发力
+[grunt]
+
+呼喊 (Vocalize)
+尖叫
+[scream]
+
+咆哮
+[roar]
+
+大喊 / 呼唤
+[shout]
+
+D. 认知与交互
+满足 (Satisfaction)
+表达好吃的“嗯~”
+[satisfaction-hmm]
+
+喝完酒爽快的“啊~”
+[satisfaction-ah]
+
+满足大类占位符
+[satisfaction-X]
+
+迟疑 (Hesitation)
+迟疑：啊…
+[hesitation-ah]
+
+迟疑：呃…
+[hesitation-uh]
+
+迟疑：嗯...
+[hesitation-hmm]
+
+迟疑大类占位符
+[hesitation-X]
+
+应答 (Response)
+应答：降调嗯
+[response-hmm]
+
+应答：降调哦
+[response-oh]
+
+应答：平调啊
+[response-ah]
+
+应答大类占位符
+[response-X]
+
+呼唤 (Call)
+呼唤：喂
+[call-wei]
+
+呼唤：嘿
+[call-hey]
+
+呼唤：诶
+[call-ei]
+
+呼唤：
+[call-oi]
+
+呼唤大类占位符
+[call-X]
+
+疑问 (Questioning)
+升调疑惑：嗯?
+[question-hmm]
+
+升调疑惑：啊?
+[question-ah]
+
+升调疑惑：咦?
+[question-yi]
+
+升调疑惑：哦?
+[question-oh]
+
+升调疑惑：哈?
+[question-huh]
+
+升调疑惑：诶？
+[question-ei]
+
+疑问大类占位符
+[question-X]
+
+惊讶 (Surprise)
+突发惊叹：啊!
+[surprise-ah]
+
+突发惊叹：哇!
+[surprise-wow]
+
+恍然大悟：哦!
+[surprise-oh]
+
+突发惊叹：哟！
+[surprise-yo]
+
+惊讶大类占位符
+[surprise-X]
+
+不满 (Disapproval)
+冷哼
+[disapproval-hmph]
+
+轻蔑地“切”
+[disapproval-qie]
+
+厌恶“咦”
+[disapproval-yi]
+
+厌恶的拟声呕吐
+[disapproval-eww]
+
+不满大类占位符
+[disapproval-X]
+
+嘘声 (Shush)
+要求安静的嘘声
+[shush]
+
+倒彩 (Boo)
+喝倒彩 / 群体嘘声
+[boo]
+
+E. 音乐与群体
+音乐 (Music)
+哼唱
+[hum]
+
+鼓掌 (Applause)
+零星拍手
+[clap]
+
+群体鼓掌
+[applause]
+1
+欢呼 (Cheer)
+欢呼
+[cheer]
+
+F. 腔调 (跨度标签)
+说话状态 (Speaking Style)
+笑着说
+&lt;laughing&gt; ... &lt;/laughing&gt;
+
+哭着说
+&lt;crying&gt; ... &lt;/crying&gt;
+
+哽咽着说
+&lt;choked_up&gt; ... &lt;/choked_up&gt;
+
+大喊着说
+&lt;shouting&gt; ... &lt;/shouting&gt;
+
+气喘吁吁地说
+&lt;breathless&gt; ... &lt;/breathless&gt;
+
+耳语着说 / 气声
+&lt;whispering&gt; ... &lt;/whispering&gt;
+
+唱歌 / 唱腔
+&lt;singing&gt; ... &lt;/singing&gt;
+
+含糊咕哝着说
+&lt;mumbling&gt; ... &lt;/mumbling&gt;
+
+口吃/结巴着说
+&lt;stuttering&gt; ... &lt;/stuttering&gt;
+
+颤抖着说
+&lt;trembling&gt; ... &lt;/trembling&gt;
+
+
+
+- 每个独立事件标签都必须在 caption 中得到明确表达。
+- 使用准确的中文事件名称，可以自然串联，但不得改变事件类别。
+- 不得用情绪、语气或笼统的“气息声”“声音变化”替代具体事件。
+- 标签之外的独立声音事件不应该补充，一切语音事件描述都应该在正文tag中明确出现；
+- 不得用一个事件覆盖另一个事件；不同类别的标签必须分别保留。
+
+必须区分：
+- cough＝咳嗽，throat_clearing／throat clearing＝清嗓，不能互换。
+- cry＝哭声，sob＝抽泣，laugh＝笑声，不能互换。
+- sniff＝吸鼻，inhale＝吸气，exhale＝呼气，gasp＝倒吸气，pant＝喘息，不能互换。
+- burp＝嗳气或饱嗝，hiccup＝呃逆，不能互换。
+- clap＝拍手，applause＝鼓掌，不能改成咳嗽、清嗓或其他声音。
+
+尖括号包裹台词的跨度标签，描述的是这段讲话的发声方式：
+- &lt;crying&gt;……&lt;/crying&gt;：说话带有哭腔。
+- &lt;laughing&gt;……&lt;/laughing&gt;：带着笑意说着。
+- &lt;whispering&gt;……&lt;/whispering&gt;：以轻声耳语的方式说。
+- &lt;shouting&gt;……&lt;/shouting&gt;：提高音量喊着说。
+- &lt;stuttering&gt;……&lt;/stuttering&gt;：说话时有明显结巴或重复。
+- &lt;breathless&gt;……&lt;/breathless&gt;：说话时气息急促、带有气喘感。
+还有更多类似的跨度标签，请你参考上面的说法来表述，表述尽量自然，贴近日常语言。
+
+将跨度标签自然融入对应讲话的风格描述，不将其改写成独立声音事件，也不据此编造“开口前哭泣”“说完后发笑”等事件及位置。其他跨度标签同样按其发声方式解释。
+
+方括号中的独立事件标签，按规定的事件类别和粗略位置保留，不替换、不遗漏。
+
+## 事件位置
+
+只使用“开口前”“说话间”“说完后”等粗略位置：
+
+- 标签前没有实际讲话内容、后面有讲话内容：开口前。
+- 标签前后都有实际讲话内容：说话间。
+- 标签前有讲话内容、后面没有实际讲话内容：说完后。
+- 判断时忽略标点、空格、换行和其他标签。标签后只有句号或逗号，不代表后面还有讲话。
+- 同类事件出现在多个位置时，保留这些位置；同一位置的重复标签可以合并描述。
+- 没有讲话时，只描述事件及其先后关系，不虚构讲话。
+- 不根据音频移动标签位置，不写时间戳或具体词语位置
+
+# 严重警告
+- 不得根据正文的词义、剧情或事件标签推断情绪。例如，台词提到悲伤不代表声音悲伤，出现哭声标签也不代表整句都带哭腔；这些特征必须从音频中独立判断。
+- 不转录、翻译、引用、概括或暗示台词内容，不透露人物关系、谈话主题、行为目的或故事情节。
+- 不描述背景音乐、环境噪声、地点、录音条件、混响或空间感。若标签明确标注鼓掌、拍手等目标事件，仍需保留该事件。
+- 不混淆事件类别：吸气不等于吸鼻，清嗓不等于咳嗽，嗳气或饱嗝不等于呃逆。
+- 不输出英文标签、字段标题、属性清单或分析过程，不使用“像是在……”“仿佛……”等推测性表述。
+- 对于标签之外的独立声音事件，禁止补充。听不清、仅疑似或类别不确定时一律不写。提交前逐一检查 caption 中的每个独立声音事件：它是否有明确标签依据？没有的，必须删除。
+# 格式要求
+1. 用一至两句连贯、自然的中文描述，通常为30—70字；事件较多时可适当延长，不为压缩长度遗漏已标注事件。
+2. 前半部分自然串联人物声音、主要情绪和说话风格；后半部分融入副语言事件及其粗略位置。避免以逗号、分号堆砌名词和形容词。
+3. 多个说话人能够从音频中清楚区分时，可以分别简述；无法确定事件归属时，不将事件强行归于某个说话人。
+4. 只有声音事件、没有讲话时，直接描述事件，不虚构讲话或说话风格。
+5. 使用中文全角标点，整段描述用中文圆括号包裹。
+以下示例仅说明表达方式，不得照搬其中事实：
+- （中年男子开口前有一声轻咳，然后用低沉略哑的嗓音缓慢说着，语气平静。）
+- （年轻女性用清亮的声音说着，语调轻快，带着明显的愉悦感，说话间夹有笑声。）
+- （年轻女性用柔和的嗓音平稳地说着，语气自然，开口前有吸鼻声，说话间有一声清嗓声。）
+提交前检查：声音特征是否仅来自音频；是否完整保留有效事件标签及粗略位置；是否泄露台词语义；是否添加了无依据的细节。
+只输出一个合法JSON对象，不输出Markdown或额外解释：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}</pre></details><details class="samples-panel" data-version="tag-only"><summary>展开本版 12 条原音与 Caption</summary><div class="sample-content"></div></details><a class="archive" href="https://moonitor-nju.github.io/qwen-caption-review/caption-span-tagonly-compare/" target="_blank" rel="noopener">打开原独立试听页 ↗</a><a class="back-top" href="#top">回到目录 ↑</a></section><section class="revision" id="whitelist"><div class="section-top"><span class="index">04</span><div><p class="date">2026-11-12—13</p><h2>精简 Prompt＋本条白名单</h2></div><span class="badge tested">当前试标版 · 共36条</span></div><div class="summary-grid"><div><h3>这一版改了什么</h3><p>移除完整类别表，只输入本条标签、中文解释和粗位置；无独立事件时明确写“无”。取消强制事件尾句，并去掉轻咳示例。</p></div><div><h3>当时观察到什么</h3><p>原12条未见明确新增独立事件或新增位置；补充24类独立事件后，仍发现正文语义泄露、位置漏写、补写次数和机械表达。小样本改善不代表全量标注准确。</p></div></div><details class="prompt-panel"><summary>展开本版完整 Prompt</summary><div class="prompt-toolbar"><button class="copy-prompt" data-version="whitelist">复制完整 Prompt</button><span class="copy-status" role="status"></span></div><pre># 任务描述
+你是一位专业的音频信息分析专家。根据音频和本条标签白名单，生成简短、自然的中文声音描述，用作语音生成模型的 instruction。
+
+# 信息来源
+- 声音特征与情绪只依据音频：概括能够明确听出的性别、年龄段、音高、音色、情绪、语速、节奏和语调，不必逐项罗列，不猜精确年龄。
+- 独立声音事件及位置、带标签的说话方式，只依据下方本条白名单。白名单是允许描述的完整集合，不是候选提示。
+- 带标签正文仅用于核对标签及其作用范围，不得用于推断人物身份、情绪、场景或剧情。
+
+# 补充信息
+带标签文本：
+{{TAGGED_TEXT}}
+
+# 本条允许描述的标签
+{{ALLOWED_LABELS}}
+
+# 严重警告
+1. 只能描述白名单中明确列出的独立事件与标签说话方式，不得增加、替换或遗漏。即使认为音频中还有其他事件，也不得补充。
+2. 如果“独立声音事件”为“无”，caption 中不得出现任何独立事件或其发生位置，只描述声音特征、情绪和允许的说话方式。
+3. 跨度标签描述讲话的发声方式，必须自然融入对应讲话，不得改写成独立事件，不得为它编造开口前、说完后的声音。
+4. 独立事件严格使用白名单给定的粗略位置；不移动、不增加位置，不补写未提供的次数、时长、强弱或动作细节。
+5. 不将情绪、音色或普通停顿推断成副语言事件，不用其他声音名称、拟声词或近义描述绕过白名单。
+6. 不转录、翻译、引用、概括或暗示正文语义，不透露人物关系、谈话主题、目的或情节。
+7. 不描述背景音乐、环境声、地点、录音条件、混响或空间感。
+8. 不输出英文标签、字段标题、属性清单或分析过程，不作“像是在”“仿佛”等推测。
+
+# 格式要求
+用一至两句自然连贯的中文，通常30—70字，整段用中文圆括号包裹。能判断时用“年轻女性”“中年男子”等自然称呼，不能判断年龄时用“男声”“女声”。
+自然串联声音特征、主要情绪和说话方式，不以逗号、分号堆砌属性。
+仅当本条白名单存在独立事件时，才将该事件及给定位置融入描述；否则直接结束，不必添加事件尾句。
+多个说话人可清楚区分时分别简述，事件归属不明时不强行归于某人。只有事件、没有讲话时，不虚构说话风格。
+无独立事件时的句式示例：（年轻女性声音清亮，语速较快，语气轻松自然。）
+示例仅供参考表达方式，禁止照搬其中事实。
+
+提交前逐一核对：所有独立事件及位置是否都在本条白名单中；所有跨度是否表达为说话方式；是否泄露正文语义。白名单之外的事件描述必须删除。
+只输出一个合法JSON对象，不加Markdown或解释：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}</pre></details><p class="metric">原12条：平均文本输入 3134 → 769 token；生成阶段 8.04 → 6.70 分钟。整版提示词及输出长度都有变化，不是单独删表的性能消融。</p><details class="samples-panel" data-version="whitelist"><summary>展开本版 36 条原音与 Caption</summary><div class="sample-content"></div></details><a class="archive" href="https://moonitor-nju.github.io/qwen-caption-review/caption-span-whitelist-compare/?v=90e6ae0a" target="_blank" rel="noopener">打开原独立试听页 ↗</a><a class="back-top" href="#top">回到目录 ↑</a></section><section class="revision" id="action-style"><div class="section-top"><span class="index">05</span><div><p class="date">2026-11-13</p><h2>自然动作叙述版</h2></div><span class="badge draft">提示词已改 · 尚未生成</span></div><div class="summary-grid"><div><h3>这一版改了什么</h3><p>保留白名单，优先用动作叙述替代“有……声”；允许日常泛指量词，同时不补具体次数、强度或时长。</p></div><div><h3>当时观察到什么</h3><p>目前只有提示词修改，尚无新模型输出，不能判断实际改善。下方措辞仅为人工示例。</p></div></div><details class="prompt-panel"><summary>展开本版完整 Prompt</summary><div class="prompt-toolbar"><button class="copy-prompt" data-version="action-style">复制完整 Prompt</button><span class="copy-status" role="status"></span></div><pre># 任务描述
+你是一位专业的音频信息分析专家。根据音频和本条标签白名单，生成简短、自然的中文声音描述，用作语音生成模型的 instruction。
+
+# 信息来源
+- 声音特征与情绪只依据音频：概括能够明确听出的性别、年龄段、音高、音色、情绪、语速、节奏和语调，不必逐项罗列，不猜精确年龄。
+- 独立声音事件及位置、带标签的说话方式，只依据下方本条白名单。白名单是允许描述的完整集合，不是候选提示。
+- 带标签正文仅用于核对标签及其作用范围，不得用于推断人物身份、情绪、场景或剧情。
+
+# 补充信息
+带标签文本：
+{{TAGGED_TEXT}}
+
+# 本条允许描述的标签
+{{ALLOWED_LABELS}}
+
+# 严重警告
+1. 只能描述白名单中明确列出的独立事件与标签说话方式，不得增加、替换或遗漏。即使认为音频中还有其他事件，也不得补充。
+2. 如果“独立声音事件”为“无”，caption 中不得出现任何独立事件或其发生位置，只描述声音特征、情绪和允许的说话方式。
+3. 跨度标签描述讲话的发声方式，必须自然融入对应讲话，不得改写成独立事件，不得为它编造开口前、说完后的声音。
+4. 独立事件保留白名单给定的先后关系，不移动或增加位置。可以用自然的叙述顺序衔接讲话和事件，不必照抄位置字段；不得补写额外动作、具体次数、时长或强弱。自然量词按下方格式要求使用。
+5. 不将情绪、音色或普通停顿推断成副语言事件，不用其他声音名称、拟声词或近义描述绕过白名单。
+6. 不转录、翻译、引用、概括或暗示正文语义，不透露人物关系、谈话主题、目的或情节。
+7. 不描述背景音乐、环境声、地点、录音条件、混响或空间感。
+8. 不输出英文标签、字段标题、属性清单或分析过程，不作“像是在”“仿佛”等推测。
+
+# 格式要求
+用一至两句自然连贯的中文，通常30—70字，整段用中文圆括号包裹。能判断时用“年轻女性”“中年男子”等自然称呼，不能判断年龄时用“男声”“女声”。
+自然串联声音特征、主要情绪和说话方式，不以逗号、分号堆砌属性。
+仅当本条白名单存在独立事件时，才将该事件及给定位置融入描述；否则直接结束，不必添加事件尾句。
+有独立事件时，优先把事件写成自然的动作叙述，顺着讲话过程衔接，避免反复使用“有……声”“伴有……声”“发出……声”等检测式句型。事件归属不明时，不擅自添加动作主体。
+可以使用“一下”“一口气”等日常表达中的泛指量词，但它们不表示经过核实的次数；白名单未提供时，不写具体数字次数、连续或反复，也不添加深、长、猛、轻等动作程度。只有本条白名单允许的事件才能采用相应动作表达。
+多个说话人可清楚区分时分别简述，事件归属不明时不强行归于某人。只有事件、没有讲话时，不虚构说话风格。
+无独立事件时的句式示例：（年轻女性声音清亮，语速较快，语气轻松自然。）
+示例仅供参考表达方式，禁止照搬其中事实。
+
+提交前逐一核对：所有独立事件及位置是否都在本条白名单中；所有跨度是否表达为说话方式；是否泄露正文语义。白名单之外的事件描述必须删除。
+只输出一个合法JSON对象，不加Markdown或解释：
+{&quot;caption&quot;:&quot;（自然、简短的声音描述。）&quot;}</pre></details><div class="draft-examples"><b>表达目标示例 · 人工示意，不是模型结果</b><p>说完后有一声呼气 → 说完后，呼了一口气。</p><p>说话间有吸鼻声 → 说话间吸了一下鼻子。</p></div><a class="back-top" href="#top">回到目录 ↑</a></section>
+<footer><p>后续每次修改作为新栏目追加，保留稳定跳转链接；同一提示词扩样可追加到对应版本。</p><a href="versions.json" download>下载本页版本与结果记录</a><a href="#top">回到顶部 ↑</a></footer>
+<noscript><p>请启用 JavaScript 以切换同样本对照和展开试听样例。完整 Prompt 和各版独立页链接仍可阅读。</p></noscript>
+</main></div><script src="app.js" defer></script></body></html>
