@@ -19,6 +19,13 @@ function persist(){try{const latest=JSON.parse(localStorage.getItem(experiment)|
 function currentRows(){return cases.filter(x=>x.target===$('#tag').value&&x.subjective).sort((a,b)=>a.review_rank-b.review_rank);}
 function choice(c,field,title,options){const key=c.id+'|'+field;return '<label>'+title+' <select data-key="'+key+'"><option value="">未评</option>'+options.map(x=>'<option value="'+esc(x)+'"'+(reviews[key]===x?' selected':'')+'>'+esc(x)+'</option>').join('')+'</select></label>';}
 function updateCard(c){const card=document.getElementById('case-'+c.id);if(!card)return;const s=reviewState(c);card.dataset.reviewState=s.kind;card.querySelector('.review-badge').textContent=badge(c);card.querySelector('.missing-fields').textContent=s.completed?'NVV已评分，自动计入完成进度。其他指标无需填写。':'只需选择“生成NVV”的结论，即自动完成本条。';}
+const trainingChoices=['未标记','需要加强','暂不加强'];
+const trainingKey=tag=>'category:'+tag+'|training_priority';
+function trainingSelect(tag){
+ const value=reviews[trainingKey(tag)]||'';
+ return '<select data-training-tag="'+esc(tag)+'" aria-label="'+esc(tag)+' 的训练优先级">'+
+ trainingChoices.map((label,i)=>{const option=i?label:'';return '<option value="'+esc(option)+'"'+(option===value?' selected':'')+'>'+label+'</option>';}).join('')+'</select>';
+}
 function updateProgress(){
  if(!plan)return;
  const all=cases.filter(c=>c.subjective),done=all.filter(c=>reviewState(c).completed).length,partial=all.filter(c=>reviewState(c).kind==='partial').length;
@@ -29,7 +36,13 @@ function updateProgress(){
  $('#tag').value=selected;
  const mine=currentRows(),d=mine.filter(c=>reviewState(c).completed).length,p=mine.filter(c=>reviewState(c).kind==='partial').length;
  $('#category-review').textContent='本类听评：已完成 '+d+'/'+mine.length+' · 部分已评 '+p+' · 未评 '+(mine.length-d-p)+'。';
- $('#overview').innerHTML=plan.categories.map(x=>{const mine=all.filter(c=>c.target===x.tag),rated=mine.filter(c=>reviews[c.id+'|nvv']),done=mine.filter(c=>reviewState(c).completed).length,hits=rated.filter(c=>reviews[c.id+'|nvv']==='目标事件自然明显').length;return '<tr><td><button class="tag-link" data-go-tag="'+esc(x.tag)+'">'+(done===x.subjective?'✓ ':'')+esc(x.tag)+'</button></td><td>'+x.selected+'</td><td>'+(status.category_generated?.[x.tag]||0)+'</td><td>'+done+' / '+rated.length+' / '+x.subjective+'</td><td>'+hits+(rated.length?' / '+rated.length:'')+'</td><td>'+x.shortfall+'</td></tr>';}).join('');
+ $('#overview').innerHTML=plan.categories.map(x=>{const mine=all.filter(c=>c.target===x.tag),rated=mine.filter(c=>reviews[c.id+'|nvv']),done=mine.filter(c=>reviewState(c).completed).length,hits=rated.filter(c=>reviews[c.id+'|nvv']==='目标事件自然明显').length;return '<tr><td><button class="tag-link" data-go-tag="'+esc(x.tag)+'">'+(done===x.subjective?'✓ ':'')+esc(x.tag)+'</button></td><td>'+x.selected+'</td><td>'+(status.category_generated?.[x.tag]||0)+'</td><td>'+done+' / '+rated.length+' / '+x.subjective+'</td><td>'+hits+(rated.length?' / '+rated.length:'')+'</td><td>'+x.shortfall+'</td><td>'+trainingSelect(x.tag)+'</td></tr>';}).join('');
+ document.querySelectorAll('[data-training-tag]').forEach(select=>select.onchange=()=>{
+  const tag=select.dataset.trainingTag;
+  setReview(trainingKey(tag),select.value);
+  persist();
+  [...document.querySelectorAll('[data-training-tag]')].find(el=>el.dataset.trainingTag===tag)?.focus({preventScroll:true});
+ });
  document.querySelectorAll('[data-go-tag]').forEach(b=>b.onclick=()=>switchTag(b.dataset.goTag));
  $('#resume').disabled=!view.id&&!view.tag;$('#resume').textContent=view.tag?'继续上次位置：'+view.tag:'继续上次位置';
 }
@@ -74,6 +87,6 @@ for(const [id,d] of [['prev',-1],['next',1]])$('#'+id).onclick=()=>{const i=labe
 $('#resume').onclick=()=>{const target=cases.find(x=>x.id===view.id);if(target){if(reviewState(target).completed)$('#pending').checked=false;switchTag(target.target,target.id);}else if(view.tag)switchTag(view.tag);};
 $('#next-review').onclick=()=>nextPending(view.id);
 $('#export').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({experiment,schema_version:2,checkpoint:'step73337',caption_protocol:'legacy_training_qwen_f329e380',dataset_sha256:plan?.dataset_sha256,reviews,view},null,2)],{type:'application/json'}));a.download=experiment+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
-$('#import').onclick=()=>$('#file').click();$('#file').onchange=async e=>{try{const x=JSON.parse(await e.target.files[0].text());if(x.experiment!==experiment)throw Error('不是本页听评文件');const valid=new Set(cases.map(c=>c.id));for(const [k,v]of Object.entries(x.reviews||{}))if(valid.has(k.split('|')[0])&&typeof v==='string')setReview(k,v);if(x.view&&labels.includes(x.view.tag)){view=x.view;saveView();}persist();render({keepScroll:true});}catch(x){alert(x.message);}};
+$('#import').onclick=()=>$('#file').click();$('#file').onchange=async e=>{try{const x=JSON.parse(await e.target.files[0].text());if(x.experiment!==experiment)throw Error('不是本页听评文件');const valid=new Set(cases.map(c=>c.id));for(const [k,v]of Object.entries(x.reviews||{}))if(typeof v==='string'&&(valid.has(k.split('|')[0])||(labels.some(tag=>k===trainingKey(tag))&&(v===''||trainingChoices.slice(1).includes(v)))))setReview(k,v);if(x.view&&labels.includes(x.view.tag)){view=x.view;saveView();}persist();render({keepScroll:true});}catch(x){alert(x.message);}};
 window.addEventListener('storage',e=>{if(e.key!==experiment)return;try{const incoming=JSON.parse(e.newValue||'{}');for(const k of dirtyKeys)incoming[k]=reviews[k];reviews=incoming;if(initialized){if(!document.querySelector('textarea:focus,select:focus')&&![...document.querySelectorAll('audio')].some(a=>!a.paused))render({keepScroll:true});else{currentRows().forEach(updateCard);updateProgress();}}}catch(err){}});
 refresh();setInterval(refresh,30000);
