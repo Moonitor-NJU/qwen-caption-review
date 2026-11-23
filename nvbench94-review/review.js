@@ -37,6 +37,7 @@ function updateProgress(){
  const mine=currentRows(),d=mine.filter(c=>reviewState(c).completed).length,p=mine.filter(c=>reviewState(c).kind==='partial').length;
  $('#category-review').textContent='本类听评：已完成 '+d+'/'+mine.length+' · 部分已评 '+p+' · 未评 '+(mine.length-d-p)+'。';
  $('#overview').innerHTML=plan.categories.map(x=>{const mine=all.filter(c=>c.target===x.tag),rated=mine.filter(c=>reviews[c.id+'|nvv']),done=mine.filter(c=>reviewState(c).completed).length,hits=rated.filter(c=>reviews[c.id+'|nvv']==='目标事件自然明显').length;return '<tr><td><button class="tag-link" data-go-tag="'+esc(x.tag)+'">'+(done===x.subjective?'✓ ':'')+esc(x.tag)+'</button></td><td>'+x.selected+'</td><td>'+(status.category_generated?.[x.tag]||0)+'</td><td>'+done+' / '+rated.length+' / '+x.subjective+'</td><td>'+hits+(rated.length?' / '+rated.length:'')+'</td><td>'+x.shortfall+'</td><td>'+trainingSelect(x.tag)+'</td></tr>';}).join('');
+ $('#current-training-priority').innerHTML='<strong>本类需要加强训练吗？</strong> '+trainingSelect(selected);
  document.querySelectorAll('[data-training-tag]').forEach(select=>select.onchange=()=>{
   const tag=select.dataset.trainingTag;
   setReview(trainingKey(tag),select.value);

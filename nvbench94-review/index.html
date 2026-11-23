@@ -46,6 +46,6 @@
 <button type="submit">连接并同步</button><button type="button" data-sync-now>立即同步</button>
 <output role="status" aria-live="polite"></output>
 </form></details></header>
-<nav><label>主评标签 <select id="tag"></select></label><button id="prev">上一类</button><button id="next">下一类</button><button id="resume">继续上次位置</button><button id="next-review">下一条未完成</button><label><input type="checkbox" id="pending">只看未完成</label><label><input type="checkbox" id="ready" checked>只看已同步音频</label><p id="category"></p><p id="category-review"></p></nav>
+<nav><label>主评标签 <select id="tag"></select></label><button id="prev">上一类</button><button id="next">下一类</button><button id="resume">继续上次位置</button><button id="next-review">下一条未完成</button><label><input type="checkbox" id="pending">只看未完成</label><label><input type="checkbox" id="ready" checked>只看已同步音频</label><p id="category"></p><p id="category-review"></p><div id="current-training-priority" style="background:#e9f4ed;padding:8px 12px;border-radius:8px;margin-top:10px"></div></nav>
 <details class="panel"><summary>94类进度与听评统计</summary><p>命中数仅计“目标事件自然明显”；所有已选NVV结论计入已评数。小样本结果不代表总体。音质另列，避免事件出现但失真仍被视为完全成功。只需评“生成NVV”即可自动完成；其他指标和备注均为可选。</p><div style="overflow:auto"><table><thead><tr><th>标签</th><th>选取/目标100</th><th>生成</th><th>已完成／已评／计划</th><th>明确命中</th><th>缺口</th><th>训练优先级（可选）</th></tr></thead><tbody id="overview"></tbody></table></div></details>
-<main id="cards"></main><script src="review.js?v=training-priority1"></script><script src="github-sync.js?v=1"></script></html>
+<main id="cards"></main><script src="review.js?v=training-priority2"></script><script src="github-sync.js?v=1"></script></html>
